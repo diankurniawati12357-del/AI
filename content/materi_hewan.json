@@ -1,0 +1,142 @@
+{
+  "chapters": [
+    {
+      "id": 1,
+      "title": "Mengenal Kelompok Hewan",
+      "cards": [
+        {
+          "id": 1,
+          "title": "Mamalia (Hewan Menyusui)",
+          "class_name": "Kelas: Mamalia",
+          "icon": "🐾",
+          "description": "Mamalia adalah vertebrata berdarah panas yang memiliki kelenjar susu untuk menyusui anaknya dan tubuh yang umumnya ditutupi rambut. Contoh mamalia di sekitar kita antara lain kucing, kelelawar, dan tupai pohon.",
+          "characteristics": "Melahirkan (vivipar), bernapas dengan paru-paru, memiliki daun telinga dan rambut."
+        },
+        {
+          "id": 2,
+          "title": "Aves (Burung & Unggas)",
+          "class_name": "Kelas: Aves",
+          "icon": "🕊️",
+          "description": "Aves adalah kelompok vertebrata bertelur yang tubuhnya ditutupi bulu dan memiliki sayap untuk terbang atau meluncur. Di kampus UNESA sering terlihat burung gereja, burung gereja erasia, kutilang, dan merpati.",
+          "characteristics": "Berdarah panas, bernapas dengan paru-paru dan pundi udara, memiliki paruh tanpa gigi."
+        },
+        {
+          "id": 3,
+          "title": "Reptilia (Hewan Melata)",
+          "class_name": "Kelas: Reptilia",
+          "icon": "🦎",
+          "description": "Reptilia adalah hewan berdarah dingin yang bergerak secara melata dan kulitnya dilindungi oleh sisik kering berbahan keratin. Hewan reptil umum di lingkungan tropis meliputi cecak, kadal kebun, dan tokek.",
+          "characteristics": "Bernapas dengan paru-paru, berkembang biak dengan ovipar atau ovovivipar, suhu tubuh dipengaruhi lingkungan."
+        },
+        {
+          "id": 4,
+          "title": "Amfibia (Hewan Dua Alam)",
+          "class_name": "Kelas: Amfibia",
+          "icon": "🐸",
+          "description": "Amfibia dapat hidup di darat dan air tawar. Fase larva (kecebong) hidup di air dengan insang, sedangkan fase dewasa bernapas dengan paru-paru dan kulit lembap. Contohnya adalah katak sawah dan kodok puru.",
+          "characteristics": "Metamorfosis sempurna, kulit berlendir tanpa sisik, fertilisasi umumnya eksternal di air."
+        },
+        {
+          "id": 5,
+          "title": "Pisces & Invertebrata",
+          "class_name": "Kelas: Pisces & Invertebrata",
+          "icon": "🐟",
+          "description": "Pisces (ikan) hidup di perairan dan bernapas dengan insang. Invertebrata merupakan kelompok hewan tanpa tulang belakang yang sangat kaya spesies, seperti kupu-kupu, capung, dan semut yang menjaga keseimbangan ekosistem.",
+          "characteristics": "Pisces bersirip dan bersisik lendir; Invertebrata memiliki eksoskeleton kitin atau tubuh lunak."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Ciri Tubuh, Makanan, & Habitat",
+      "cards": [
+        {
+          "id": 1,
+          "title": "Herbivora: Pemakan Tumbuhan",
+          "class_name": "Kategori Makanan",
+          "icon": "🌿",
+          "description": "Herbivora mengonsumsi dedaunan, rumput, buah, dan biji-bijian. Mereka memiliki gigi geraham yang lebar dan rata untuk menggiling serat selulosa tumbuhan, contohnya kelinci, ulat, dan kambing.",
+          "characteristics": "Saluran pencernaan lebih panjang untuk mencerna selulosa, sering menjadi mangsa di rantai makanan."
+        },
+        {
+          "id": 2,
+          "title": "Karnivora: Pemangsa Daging",
+          "class_name": "Kategori Makanan",
+          "icon": "🥩",
+          "description": "Karnivora memiliki adaptasi fisik berupa cakar tajam dan gigi taring yang runcing untuk menangkap serta merobek mangsa. Contoh karnivora urban antara lain kucing liar, burung hantu, dan ular.",
+          "characteristics": "Penglihatan binokular tajam, gerak lincah, dan sistem pencernaan lebih ringkas."
+        },
+        {
+          "id": 3,
+          "title": "Omnivora: Pemakan Segala",
+          "class_name": "Kategori Makanan",
+          "icon": "🍱",
+          "description": "Omnivora dapat mencerna materi hewani maupun tumbuhan. Fleksibilitas diet ini membuat mereka sangat adaptif di area yang padat aktivitas manusia, seperti burung gagak, tikus, dan bebek.",
+          "characteristics": "Kombinasi gigi taring dan geraham, kemampuan adaptasi habitat yang tinggi."
+        },
+        {
+          "id": 4,
+          "title": "Adaptasi Alat Gerak",
+          "class_name": "Ciri Fisik",
+          "icon": "🐾",
+          "description": "Bentuk kaki dan sayap hewan mencerminkan cara hidupnya. Sayap burung berongga dan ringan, kaki katak berselaput untuk berenang, dan telapak cecak memiliki setae mikroskopis untuk menempel di dinding.",
+          "characteristics": "Bentuk anatomi menyesuaikan kebutuhan bertahan hidup dan mobilitas."
+        },
+        {
+          "id": 5,
+          "title": "Habitat Alami & Urban",
+          "class_name": "Lingkungan Hidup",
+          "icon": "🌳",
+          "description": "Fauna menempati beragam habitat: terestrial (darat), arboreal (pepohonan), akuatik (air), hingga lingkungan perkotaan/kampus hijau seperti taman rindang, kanopi pohon trembesi, dan kolam resapan.",
+          "characteristics": "Keberadaan ruang terbuka hijau (RTH) sangat krusial sebagai koridor jelajah satwa."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Keanekaragaman & Konservasi",
+      "cards": [
+        {
+          "id": 1,
+          "title": "Peran Fauna dalam Rantai Makanan",
+          "class_name": "Ekologi",
+          "icon": "🔄",
+          "description": "Setiap satwa menempati relung ekologis spesifik. Predator mengontrol ledakan populasi hama, sementara herbivora merangsang regenerasi vegetasi melalui penyerbukan dan pemencaran biji.",
+          "characteristics": "Hilangnya satu spesies dapat memicu gangguan trofik pada ekosistem sekitarnya."
+        },
+        {
+          "id": 2,
+          "title": "Bioindikator Kualitas Lingkungan",
+          "class_name": "Indikator Alami",
+          "icon": "🐸",
+          "description": "Amfibia dan capung merupakan bioindikator alami air bersih dan udara segar. Kulit amfibi yang permeabel sangat sensitif terhadap polutan kimia dan pestisida di perairan sekitar kampus.",
+          "characteristics": "Penurunan populasi katak menandakan penurunan mutu perairan dan habitat basah."
+        },
+        {
+          "id": 3,
+          "title": "Polinator & Penyebar Biji",
+          "class_name": "Interaksi Mutualisme",
+          "icon": "🦋",
+          "description": "Kupu-kupu, lebah, dan kelelawar pemakan nektar bertindak sebagai polinator penting untuk bunga-bungaan, sedangkan burung pemakan buah membantu menyebarkan bibit pohon baru di area kampus.",
+          "characteristics": "Menjaga keberlangsungan reproduksi flora hutan kota dan taman."
+        },
+        {
+          "id": 4,
+          "title": "Ancaman Kehilangan Habitat",
+          "class_name": "Konservasi",
+          "icon": "⚠️",
+          "description": "Pembangunan beton, pemotongan pohon rindang tanpa peremajaan, serta sampah plastik menjadi ancaman nyata bagi satwa liar yang bergantung pada ranting pohon dan genangan alami.",
+          "characteristics": "Fragmentasi habitat mempersempit ruang gerak dan mengurangi suplai makanan alami."
+        },
+        {
+          "id": 5,
+          "title": "Aksi Pelestarian Kampus Hijau",
+          "class_name": "Tindakan Nyata",
+          "icon": "💚",
+          "description": "Langkah nyata menjaga biodiversitas kampus: tidak memburu burung liar, membiarkan sarang serangga penyerbuk tetap aman, menanam pohon peneduh lokal, dan memilah sampah.",
+          "characteristics": "Menciptakan lingkungan kampus UNESA yang ramah satwa dan berkelanjutan."
+        }
+      ]
+    }
+  ]
+}

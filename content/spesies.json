@@ -1,0 +1,118 @@
+{
+  "categories": {
+    "hewan": {
+      "title": "Hewan",
+      "groups": {
+        "Mamalia": {
+          "id": "mamalia",
+          "name": "Mamalia",
+          "class_badge": "Kelas: Mamalia",
+          "scientific_name": "Mammalia",
+          "icon": "🐾",
+          "description": "Mamalia merupakan kelompok vertebrata berdarah panas yang merawat anaknya dengan menyusui melalui kelenjar mamae. Di area hijau kampus UNESA, mamalia kecil seperti tupai kelapa dan kelelawar malam kerap terlihat melintas di kanopi pepohonan tinggi.",
+          "characteristics": "Memiliki rambut pada tubuh, bernapas dengan paru-paru, melahirkan anak (vivipar), dan memiliki daun telinga.",
+          "habitat": "Arboreal (pepohonan kanopi kampus) dan lingkungan terestrial sekitar taman.",
+          "food": "Buah-buahan, biji, serangga, dan pucuk daun muda.",
+          "unique_fact": "Kelelawar adalah satu-satunya mamalia di bumi yang memiliki kemampuan terbang sejati.",
+          "model_3d_file": "cat.glb"
+        },
+        "Aves": {
+          "id": "aves",
+          "name": "Aves (Burung)",
+          "class_badge": "Kelas: Aves",
+          "scientific_name": "Aves",
+          "icon": "🕊️",
+          "description": "Aves adalah vertebrata bertelur yang tubuhnya ditutupi bulu aerodinamis dan memiliki sepasang sayap. Burung gereja (Passer montanus) dan burung kutilang adalah penghuni tetap yang sering berkicau di pagi hari di sekitar gedung rektorat dan fakultas UNESA.",
+          "characteristics": "Berdarah panas (endoterm), memiliki paruh berkeratin tanpa gigi, tulang berongga ringan, dan kantung udara pernapasan.",
+          "habitat": "Tajuk pohon peneduh, tiang listrik, atap gedung kampus, dan semak taman.",
+          "food": "Biji-bijian liar, bulir padi, serangga kecil, dan nektar bunga.",
+          "unique_fact": "Bulu burung bukan sekadar hiasan, melainkan insulator suhu tubuh terbaik sekaligus pengatur daya angkat saat bermanuver terbang.",
+          "model_3d_file": "bird.glb"
+        },
+        "Reptil": {
+          "id": "reptil",
+          "name": "Reptilia (Hewan Melata)",
+          "class_badge": "Kelas: Reptilia",
+          "scientific_name": "Reptilia",
+          "icon": "🦎",
+          "description": "Reptil merupakan kelompok hewan ektotermik (berdarah dingin) yang bergerak secara melata dan kulitnya dilindungi oleh sisik kering. Cecak tembok dan kadal kebun sering terlihat berjemur di dinding bebatuan taman kampus UNESA untuk menaikkan suhu tubuh.",
+          "characteristics": "Kulit bersisik keratin, bernapas menggunakan paru-paru, berkembang biak dengan bertelur (ovipar) bercangkang liat.",
+          "habitat": "Dinding bebatuan, celah gedung, serasah dedaunan kering, dan batang pohon taman.",
+          "food": "Nyamuk, laron, ngengat, dan serangga tanah kecil.",
+          "unique_fact": "Cecak mampu memutuskan ekornya sendiri (autotomi) untuk mengelabui pemangsa saat terancam bahaya.",
+          "model_3d_file": "lizard.glb"
+        },
+        "Amfibi": {
+          "id": "amfibi",
+          "name": "Amfibia (Hewan Dua Alam)",
+          "class_badge": "Kelas: Amfibia",
+          "scientific_name": "Amphibia",
+          "icon": "🐸",
+          "description": "Amfibi adalah vertebrata yang menjalani dua fase kehidupan unik: fase akuatik berinsang saat kecebong dan fase terestrial berparu-paru saat dewasa. Katak sawah (Fejervarya cancrivora) dan kodok puru banyak menghuni area kolam resapan dan selokan kampus UNESA.",
+          "characteristics": "Kulit basah berlendir permeabel tanpa sisik, metamorfosis lengkap, fertilisasi eksternal di media perairan tawar.",
+          "habitat": "Tepian kolam kampus, genangan drainase alami, dan rerumputan lembap.",
+          "food": "Serangga malam, jentik nyamuk, cacing, dan siput kecil.",
+          "unique_fact": "Katak bernapas tidak hanya dengan paru-paru tetapi juga melalui penyerapan oksigen langsung melalui kulit basahnya.",
+          "model_3d_file": "frog.glb"
+        },
+        "Pisces": {
+          "id": "pisces",
+          "name": "Pisces (Ikan)",
+          "class_badge": "Kelas: Pisces",
+          "scientific_name": "Pisces",
+          "icon": "🐟",
+          "description": "Pisces merupakan vertebrata air yang bernapas menggunakan insang dan bergerak lincah dengan sirip serta gurat sisi pendeteksi getaran air. Kolam rekreasi dan danau resapan UNESA dihuni oleh ikan nila, mujair, dan ikan mas.",
+          "characteristics": "Bernapas dengan lembaran insang, tubuh bersisik licin berlendir, berdarah dingin (poikiloterm).",
+          "habitat": "Ekosistem perairan tawar, danau kampus, kolam taman, dan aliran kanal resapan.",
+          "food": "Alga hijau, lumut, plankton air, dan larva serangga air.",
+          "unique_fact": "Ikan memiliki organ gurat sisi (lateral line) di sepanjang tubuhnya yang berfungsi merasakan gelombang tekanan air dari predator.",
+          "model_3d_file": "fish.glb"
+        },
+        "Invertebrata": {
+          "id": "invertebrata",
+          "name": "Invertebrata (Serangga & Artropoda)",
+          "class_badge": "Kelas: Invertebrata",
+          "scientific_name": "Invertebrata",
+          "icon": "🦋",
+          "description": "Invertebrata adalah kelompok organisme tanpa tulang belakang yang menyusun keanekaragaman fauna terbesar. Kupu-kupu, capung jarum, dan lebah madu menjadi penghias utama padang bunga taman kampus UNESA yang aktif di siang hari.",
+          "characteristics": "Memiliki eksoskeleton luar berbahan kitin keras, tubuh beruas, dan sepasang antena peraba.",
+          "habitat": "Bunga mekar, semak belukar, dedaunan, permukaan air kolam, dan tanah gembur.",
+          "food": "Nektar manis bunga, sari daun, kutu tanaman, atau cairan organik tanaman.",
+          "unique_fact": "Capung memiliki mata majemuk dengan lebih dari 30.000 lensa mikroskopis yang memberikannya sudut pandang penglihatan hampir 360 derajat.",
+          "model_3d_file": "butterfly.glb"
+        }
+      }
+    },
+    "tumbuhan": {
+      "title": "Tumbuhan",
+      "groups": {
+        "Dikotil": {
+          "id": "dikotil",
+          "name": "Tumbuhan Dikotil",
+          "class_badge": "Kelas: Magnoliopsida (Dikotil)",
+          "scientific_name": "Magnoliopsida",
+          "icon": "🌳",
+          "description": "Tumbuhan dikotil adalah kelompok tumbuhan berbunga yang embrionya memiliki dua keping biji. Di kampus UNESA, pohon trembesi rindang dan bunga kembang sepatu merupakan contoh dikotil yang memberikan keteduhan dan keindahan pemandangan alami.",
+          "characteristics": "Akar tunggang bercabang kokoh, batang berkambium berkayu keras, daun dengan pertulangan menyirip/menjari, bunga kelipatan 2, 4, atau 5.",
+          "habitat": "Taman kampus, koridor jalan utama UNESA, ruang terbuka hijau, dan pekarangan gedung.",
+          "flower_seed": "Mahkota bunga kelipatan 4 atau 5, biji berkeping dua yang membelah saat bertunas.",
+          "unique_fact": "Kanopi pohon trembesi dikotil di UNESA mampu menyerap puluhan ton gas karbon dioksida per tahun, menjadikannya penyaring polusi alami paling tangguh.",
+          "model_3d_file": "tree.glb"
+        },
+        "Monokotil": {
+          "id": "monokotil",
+          "name": "Tumbuhan Monokotil",
+          "class_badge": "Kelas: Liliopsida (Monokotil)",
+          "scientific_name": "Liliopsida",
+          "icon": "🎋",
+          "description": "Tumbuhan monokotil memiliki satu keping biji dalam lembaga buahnya. Rumpun bambu hias di taman serta hamparan rumput teki di lapangan UNESA adalah contoh monokotil yang berperan vital menjaga stabilitas lapisan atas tanah dari erosi air hujan.",
+          "characteristics": "Sistem perakaran serabut menyebar, batang tidak berkambium dengan berkas pembuluh tersebar acak, pertulangan daun sejajar pita, bunga kelipatan 3.",
+          "habitat": "Padang rumput terbuka kampus, tepian trotoar, dan pembatas jalur hijau.",
+          "flower_seed": "Mahkota bunga kelipatan 3, biji berkeping tunggal dengan endosperma bertepung.",
+          "unique_fact": "Bambu monokotil dinobatkan sebagai salah satu tanaman darat dengan laju pertumbuhan harian tercepat di dunia, mencapai hingga 90 cm per hari dalam kondisi optimal.",
+          "model_3d_file": "plant.glb"
+        }
+      }
+    }
+  }
+}

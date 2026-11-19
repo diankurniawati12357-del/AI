@@ -1,0 +1,127 @@
+{
+  "chapters": [
+    {
+      "id": 1,
+      "title": "Kuis Mengenal Kelompok Hewan",
+      "questions": [
+        {
+          "id": 1,
+          "question": "Kelompok hewan yang memiliki kelenjar susu dan melahirkan anaknya disebut apa?",
+          "options": ["Reptilia", "Mamalia", "Aves", "Amfibia"],
+          "correct_answer": "Mamalia",
+          "explanation": "Mamalia adalah vertebrata berdarah panas yang dicirikan dengan keberadaan kelenjar susu (glandula mammae) untuk menyusui anaknya, serta tubuh yang umumnya ditutupi rambut."
+        },
+        {
+          "id": 2,
+          "question": "Manakah di antara hewan berikut yang termasuk dalam kelompok Aves?",
+          "options": ["Kelelawar", "Burung Gereja", "Katak Pohon", "Kadal Kebun"],
+          "correct_answer": "Burung Gereja",
+          "explanation": "Burung gereja termasuk kelompok Aves karena tubuhnya ditutupi bulu, memiliki paruh tanpa gigi, bertelur, dan bersayap. Kelelawar adalah mamalia terbang."
+        },
+        {
+          "id": 3,
+          "question": "Ciri khas kulit hewan reptilia yang membedakannya dari amfibi adalah...",
+          "options": ["Selalu lembap dan berlendir", "Ditutupi sisik kering dari zat tanduk (keratin)", "Ditutupi bulu halus", "Memiliki kelenjar keringat aktif"],
+          "correct_answer": "Ditutupi sisik kering dari zat tanduk (keratin)",
+          "explanation": "Kulit reptil ditutupi sisik kering berbahan keratin yang berfungsi mencegah dehidrasi atau kehilangan air dari tubuh di lingkungan darat."
+        },
+        {
+          "id": 4,
+          "question": "Amfibia seperti katak pada masa larva (kecebong) bernapas menggunakan...",
+          "options": ["Paru-paru", "Trakea", "Insang", "Pundi-pundi udara"],
+          "correct_answer": "Insang",
+          "explanation": "Saat berupa kecebong di air, amfibi bernapas dengan insang. Setelah bermetamorfosis menjadi katak dewasa, alat pernapasan utamanya beralih ke paru-paru dan permukaan kulit lembap."
+        },
+        {
+          "id": 5,
+          "question": "Kelompok hewan yang tidak memiliki tulang belakang disebut...",
+          "options": ["Vertebrata", "Invertebrata", "Karnivora", "Vivipar"],
+          "correct_answer": "Invertebrata",
+          "explanation": "Invertebrata (atau avertebrata) adalah kelompok besar hewan yang tidak memiliki kolom tulang belakang, seperti serangga, laba-laba, cacing, dan moluska."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Kuis Ciri Tubuh, Makanan, & Habitat",
+      "questions": [
+        {
+          "id": 1,
+          "question": "Hewan yang memakan tumbuhan disebut apa?",
+          "options": ["Karnivora", "Herbivora", "Omnivora", "Insektivora"],
+          "correct_answer": "Herbivora",
+          "explanation": "Herbivora merupakan kelompok hewan yang sumber makanan utamanya berasal dari tumbuhan, contohnya sapi, kambing, kelinci, dan ulat pemakan daun."
+        },
+        {
+          "id": 2,
+          "question": "Hewan pemakan daging seperti kucing dan burung hantu memiliki gigi taring tajam untuk...",
+          "options": ["Menggiling serat rumput", "Menyaring plankton air", "Merobek dan mengoyak daging mangsa", "Menghisap cairan nektar"],
+          "correct_answer": "Merobek dan mengoyak daging mangsa",
+          "explanation": "Gigi taring yang runcing dan kokoh pada karnivora beradaptasi secara khusus untuk menembus, mencengkeram, dan mengoyak jaringan daging mangsa."
+        },
+        {
+          "id": 3,
+          "question": "Hewan yang mengonsumsi baik tumbuhan maupun daging hewan lain diklasifikasikan sebagai...",
+          "options": ["Omnivora", "Herbivora", "Karnivora", "Detritivora"],
+          "correct_answer": "Omnivora",
+          "explanation": "Omnivora adalah organisme pemakan segala, memiliki fleksibilitas diet memakan buah/biji-bijian sekaligus serangga atau daging kecil, seperti ayam, bebek, dan tikus."
+        },
+        {
+          "id": 4,
+          "question": "Kaki berselaput pada katak dan bebek berfungsi sebagai adaptasi untuk...",
+          "options": ["Memanjat batang pohon licin", "Berenang dan mendayung di air", "Menggali liang tanah keras", "Mencengkeram mangsa di udara"],
+          "correct_answer": "Berenang dan mendayung di air",
+          "explanation": "Selaput di antara jari-jari kaki memperluas bidang kontak dengan air, bertindak seperti dayung efisien saat hewan berenang."
+        },
+        {
+          "id": 5,
+          "question": "Satwa yang sebagian besar aktivitas hidupnya berlangsung di tajuk pepohonan disebut satwa berhabitat...",
+          "options": ["Akuatik", "Fosorial", "Arboreal", "Bentos"],
+          "correct_answer": "Arboreal",
+          "explanation": "Habitat arboreal merujuk pada kehidupan di pepohonan, contohnya burung kutilang dan bajing yang bersarang serta mencari makan di ranting kanopi."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Kuis Keanekaragaman & Konservasi",
+      "questions": [
+        {
+          "id": 1,
+          "question": "Mengapa katak sering disebut sebagai bioindikator kualitas lingkungan perairan?",
+          "options": ["Katak hanya bertelur di air asin", "Kulit katak permeabel dan sangat peka terhadap polutan air", "Katak merupakan pemangsa puncak ekosistem", "Katak tidak membutuhkan oksigen"],
+          "correct_answer": "Kulit katak permeabel dan sangat peka terhadap polutan air",
+          "explanation": "Kulit amfibi yang tipis dan tembus air menyerap zat langsung dari lingkungan. Jika air tercemar limbah atau pestisida, populasi katak akan menurun drastis terlebih dahulu."
+        },
+        {
+          "id": 2,
+          "question": "Peran serangga seperti lebah dan kupu-kupu dalam siklus hidup tanaman berbunga adalah...",
+          "options": ["Sebagai dekomposer pembusuk batang", "Sebagai agen penyerbukan (polinator)", "Sebagai penghasil gas nitrogen", "Sebagai penghambat pertumbuhan biji"],
+          "correct_answer": "Sebagai agen penyerbukan (polinator)",
+          "explanation": "Saat menghisap nektar, serbuk sari menempel pada tubuh serangga dan terbawa ke kepala putik bunga lain, memicu pembuahan dan terbentuknya buah serta biji."
+        },
+        {
+          "id": 3,
+          "question": "Apa dampak negatif utama dari perburuan liar burung di area kampus hijau?",
+          "options": ["Populasi tanaman langsung mati mendadak", "Terjadinya ledakan hama ulat dan serangga perusak tanaman", "Suhu udara kampus langsung turun drastis", "Kadar oksigen berkurang seketika"],
+          "correct_answer": "Terjadinya ledakan hama ulat dan serangga perusak tanaman",
+          "explanation": "Burung pemakan serangga bertindak sebagai pengendali alami populasi hama. Hilangnya burung menyebabkan populasi ulat meningkat tak terkendali dan merusak dedaunan."
+        },
+        {
+          "id": 4,
+          "question": "Salah satu bentuk upaya konservasi satwa yang tepat di lingkungan universitas adalah...",
+          "options": ["Memelihara semua satwa liar dalam kandang sempit", "Menjaga ruang terbuka hijau dan pohon peneduh lokal tetap asri", "Menyemprotkan insektisida kimia dosis tinggi di seluruh taman", "Membasmi sarang lebah dan burung"],
+          "correct_answer": "Menjaga ruang terbuka hijau dan pohon peneduh lokal tetap asri",
+          "explanation": "Konservasi in-situ terbaik di area kampus adalah memelihara habitat alami, menanam pohon peneduh rindang, dan meminimalkan pencemaran lingkungan."
+        },
+        {
+          "id": 5,
+          "question": "Hubungan saling menguntungkan antara burung madu yang memakan nektar dan bunga kembang sepatu disebut simbiosis...",
+          "options": ["Parasitisme", "Komensalisme", "Mutualisme", "Amensalisme"],
+          "correct_answer": "Mutualisme",
+          "explanation": "Simbiosis mutualisme menguntungkan kedua belah pihak: burung madu memperoleh sumber energi berupa nektar manis, sedangkan tanaman dibantu proses penyerbukannya."
+        }
+      ]
+    }
+  ]
+}

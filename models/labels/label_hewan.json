@@ -1,0 +1,5 @@
+{
+  "classes": ["Mamalia", "Aves", "Reptil", "Amfibi", "Pisces", "Invertebrata"],
+  "input_shape": [224, 224, 3],
+  "normalization": "rescale_1_255"
+}

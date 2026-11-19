@@ -1,0 +1,127 @@
+{
+  "chapters": [
+    {
+      "id": 1,
+      "title": "Kuis Dikotil & Monokotil",
+      "questions": [
+        {
+          "id": 1,
+          "question": "Berapakah jumlah keping biji pada tumbuhan monokotil?",
+          "options": ["Satu keping", "Dua keping", "Tiga keping", "Empat keping"],
+          "correct_answer": "Satu keping",
+          "explanation": "Monokotil berasal dari kata 'mono' (satu) dan 'kotiledon' (keping biji), merujuk pada tumbuhan berbunga yang embrionya hanya memiliki satu daun lembaga/keping biji."
+        },
+        {
+          "id": 2,
+          "question": "Tumbuhan dikotil umumnya memiliki sistem perakaran berupa...",
+          "options": ["Akar serabut", "Akar tunggang", "Akar pelekat semu", "Akar napas saja"],
+          "correct_answer": "Akar tunggang",
+          "explanation": "Dikotil memiliki akar tunggang utama yang tumbuh lurus ke bawah dan bercabang-cabang, memberikan kekuatan tumpuan bagi batang pohon berkayu besar."
+        },
+        {
+          "id": 3,
+          "question": "Pola pertulangan daun sejajar atau melengkung merupakan ciri khas dari tumbuhan...",
+          "options": ["Dikotil", "Monokotil", "Gymnospermae", "Pteridophyta"],
+          "correct_answer": "Monokotil",
+          "explanation": "Tumbuhan monokotil seperti rumput, jagung, dan padi memiliki urat daun memanjang sejajar, sedangkan dikotil umumnya menyirip atau menjari."
+        },
+        {
+          "id": 4,
+          "question": "Jaringan pada batang dikotil yang aktif membelah menyebabkan batang membesar dan berkayu adalah...",
+          "options": ["Epidermis", "Kambium", "Korteks", "Stomata"],
+          "correct_answer": "Kambium",
+          "explanation": "Kambium vaskular pada dikotil menghasilkan xilem sekunder ke arah dalam (kayu) dan floem sekunder ke arah luar, memungkinkan pertumbuhan diameter batang."
+        },
+        {
+          "id": 5,
+          "question": "Mahkota bunga pada tumbuhan monokotil umumnya berkelipatan...",
+          "options": ["2, 4, atau 5", "3 atau kelipatannya", "Selalu 7", "Hanya 1 helai"],
+          "correct_answer": "3 atau kelipatannya",
+          "explanation": "Bunga monokotil biasanya memiliki kelipatan 3 (misalnya 3 atau 6 kelopak/mahkota), berbeda dari bunga dikotil yang berkelipatan 2, 4, atau 5."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Kuis Tumbuhan di Sekitar UNESA",
+      "questions": [
+        {
+          "id": 1,
+          "question": "Pohon peneduh raksasa berkanopi lebar yang banyak dijumpai di ruang terbuka kampus UNESA adalah...",
+          "options": ["Pohon Trembesi (Samanea saman)", "Pohon Pinus Merkusii", "Kaktus Centong", "Pohon Apel"],
+          "correct_answer": "Pohon Trembesi (Samanea saman)",
+          "explanation": "Pohon trembesi dikenal sebagai 'pohon hujan' dengan kanopi rindang menyerupai payung raksasa yang sangat efektif menyerap karbon dan meneduhi jalan kampus."
+        },
+        {
+          "id": 2,
+          "question": "Bunga kembang sepatu (Hibiscus rosa-sinensis) yang sering menghiasi taman kampus tergolong tumbuhan...",
+          "options": ["Monokotil", "Dikotil", "Lumut", "Paku-pakuan"],
+          "correct_answer": "Dikotil",
+          "explanation": "Kembang sepatu adalah tumbuhan dikotil dengan sistem perakaran tunggang, batang berkayu keras, daun menyirip, dan mahkota bunga berjumlah 5 helai."
+        },
+        {
+          "id": 3,
+          "question": "Bambu hias yang memiliki batang berbuku, berongga, dan berakar serabut dikelompokkan ke dalam...",
+          "options": ["Monokotil", "Dikotil", "Gymnospermae", "Alga"],
+          "correct_answer": "Monokotil",
+          "explanation": "Bambu termasuk ke dalam famili Poaceae (rumput-rumputan) yang merupakan tumbuhan monokotil berakar serabut dengan jaringan pembuluh batang tersebar."
+        },
+        {
+          "id": 4,
+          "question": "Mengapa pohon mangga (Mangifera indica) di pekarangan gedung kuliah mampu tumbuh kokoh bertahun-tahun?",
+          "options": ["Memiliki akar serabut tipis", "Memiliki batang berkayu keras dengan kambium aktif", "Tidak memiliki percabangan", "Menyerap nutrisi langsung dari udara"],
+          "correct_answer": "Memiliki batang berkayu keras dengan kambium aktif",
+          "explanation": "Sebagai tumbuhan dikotil tahunan, mangga memiliki kambium yang membentuk kayu kuat dan akar tunggang yang menancap kuat menopang bobot tajuk."
+        },
+        {
+          "id": 5,
+          "question": "Rumput teki liar di lapangan hijau kampus memiliki umbi bawah tanah yang berfungsi untuk...",
+          "options": ["Menyimpan cadangan energi dan regenerasi tunas", "Menghasilkan getah beracun bagi manusia", "Menarik perhatian serangga penyerbuk", "Menggantikan peran klorofil daun"],
+          "correct_answer": "Menyimpan cadangan energi dan regenerasi tunas",
+          "explanation": "Umbi batang rumput teki menyimpan pati cadangan yang memungkinkannya bertahan saat musim kering dan segera menumbuhkan tunas baru saat terkena hujan."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Kuis Peran Tumbuhan dalam Ekosistem",
+      "questions": [
+        {
+          "id": 1,
+          "question": "Gas yang diserap tumbuhan dari udara dalam proses fotosintesis adalah...",
+          "options": ["Oksigen (O2)", "Karbon Dioksida (CO2)", "Helium (He)", "Metana (CH4)"],
+          "correct_answer": "Karbon Dioksida (CO2)",
+          "explanation": "Dalam fotosintesis, tumbuhan menyerap gas karbon dioksida (CO2) melalui stomata daun dan mengubahnya menjadi molekul glukosa serta melepaskan oksigen (O2)."
+        },
+        {
+          "id": 2,
+          "question": "Fenomena penurunan suhu udara lokal di sekitar pepohonan rindang kampus terjadi karena proses...",
+          "options": ["Evapotranspirasi dan keteduhan kanopi", "Pemanasan tanah langsung", "Penyerbukan bunga", "Pengeringan daun gugur"],
+          "correct_answer": "Evapotranspirasi dan keteduhan kanopi",
+          "explanation": "Pohon melepaskan uap air melalui transpirasi dan kanopinya menghalangi radiasi matahari langsung ke tanah/aspal, menciptakan iklim mikro yang jauh lebih sejuk."
+        },
+        {
+          "id": 3,
+          "question": "Bagaimanakah sistem perakaran pepohonan membantu mencegah banjir dan erosi di area kampus?",
+          "options": ["Membuat permukaan tanah menjadi kedap air seperti semen", "Mengikat partikel tanah dan meningkatkan porositas resapan air", "Membuang air tanah ke udara dalam sekejap", "Menutup aliran sungai sepenuhnya"],
+          "correct_answer": "Mengikat partikel tanah dan meningkatkan porositas resapan air",
+          "explanation": "Akar pepohonan mengikat butiran tanah agar tidak tergerus air dan menciptakan jalur biopori alami yang mempercepat peresapan air hujan ke lapisan akuifer."
+        },
+        {
+          "id": 4,
+          "question": "Dalam rantai makanan ekosistem, tumbuhan berkedudukan sebagai...",
+          "options": ["Konsumen primer", "Produsen (organisme autotrof)", "Konsumen sekunder", "Pengurai (dekomposer)"],
+          "correct_answer": "Produsen (organisme autotrof)",
+          "explanation": "Tumbuhan adalah produsen utama karena mampu menghasilkan makanannya sendiri (autotrof) melalui fotosintesis yang menjadi dasar energi bagi konsumen."
+        },
+        {
+          "id": 5,
+          "question": "Upaya pelestarian keanekaragaman flora yang paling berkelanjutan di lingkungan universitas adalah...",
+          "options": ["Mengganti seluruh taman dengan rumput sintetis plastik", "Memperluas ruang terbuka hijau dengan vegetasi peneduh lokal", "Memotong semua pohon tua tanpa penanaman kembali", "Membatasi tumbuhan hanya dalam pot bunga kecil"],
+          "correct_answer": "Memperluas ruang terbuka hijau dengan vegetasi peneduh lokal",
+          "explanation": "Memelihara ruang terbuka hijau berbasis pohon lokal menjaga ekosistem alami, habitat satwa, dan kenyamanan lingkungan belajar kampus."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "chapters": [
+    {
+      "id": 1,
+      "title": "Dikotil & Monokotil",
+      "cards": [
+        {
+          "id": 1,
+          "title": "Struktur Biji & Keping (Kotiledon)",
+          "class_name": "Klasifikasi Dasar",
+          "icon": "🌱",
+          "description": "Tumbuhan berbunga (Angiospermae) terbagi menjadi dua kelas utama: Monokotil (biji berkeping satu) dan Dikotil (biji berkeping dua). Cadangan makanan disimpan dalam kotiledon untuk perkecambahan tunas.",
+          "characteristics": "Monokotil: 1 keping biji; Dikotil: 2 keping biji yang membelah saat bertunas."
+        },
+        {
+          "id": 2,
+          "title": "Sistem Perakaran: Serabut vs Tunggang",
+          "class_name": "Morfologi Akar",
+          "icon": "🥕",
+          "description": "Monokotil memiliki sistem perakaran serabut yang menyebar di lapisan tanah atas. Sebaliknya, dikotil memiliki akar tunggang primer kokoh yang menembus ke dalam tanah dengan cabang-cabang akar lateral.",
+          "characteristics": "Akar tunggang memberi stabilitas pohon besar; akar serabut menahan erosi permukaan tanah."
+        },
+        {
+          "id": 3,
+          "title": "Pola Pertulangan Daun",
+          "class_name": "Morfologi Daun",
+          "icon": "🍃",
+          "description": "Perhatikan urat-urat daun di sekitarmu! Tumbuhan monokotil memiliki pertulangan daun sejajar (seperti rumput/padi) atau melengkung (seperti sirih). Daun dikotil umumnya memiliki pola pertulangan menyirip (seperti mangga) atau menjari (seperti singkong).",
+          "characteristics": "Pola pertulangan daun adalah ciri visual tercepat dalam klasifikasi tumbuhan."
+        },
+        {
+          "id": 4,
+          "title": "Struktur Batang & Kambium",
+          "class_name": "Anatomi Batang",
+          "icon": "🪵",
+          "description": "Batang dikotil memiliki kambium vaskular yang memungkinkan pertumbuhan sekunder melebar sehingga membentuk kayu dan lingkaran tahun. Batang monokotil tidak berkambium; berkas pembuluhnya tersebar acak di seluruh jaringan dasar.",
+          "characteristics": "Batang dikotil bercabang dan berkayu keras; monokotil umumnya tidak bercabang."
+        },
+        {
+          "id": 5,
+          "title": "Kelipatan Mahkota Bunga",
+          "class_name": "Organ Reproduksi",
+          "icon": "🌸",
+          "description": "Bunga monokotil biasanya memiliki mahkota, kelopak, atau benang sari dalam kelipatan 3 (contohnya bunga lili dan anggrek). Bunga dikotil memiliki bagian-bagian bunga dalam kelipatan 2, 4, atau 5 (contohnya bunga sepatu dan kamboja).",
+          "characteristics": "Jumlah mahkota bunga menjadi pembeda taksonomis yang konsisten."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Tumbuhan di Sekitar UNESA",
+      "cards": [
+        {
+          "id": 1,
+          "title": "Pohon Trembesi (Samanea saman)",
+          "class_name": "Kelas: Dikotil (Fabaceae)",
+          "icon": "🌳",
+          "description": "Pohon peneduh raksasa dengan kanopi melebar yang banyak tumbuh di koridor dan ruang terbuka kampus UNESA. Daun majemuknya menutup menjelang malam atau saat hujan lebat.",
+          "characteristics": "Daya serap karbon dioksida sangat tinggi (hingga 28,5 ton CO2/tahun/pohon), akar kuat menahan air tanah."
+        },
+        {
+          "id": 2,
+          "title": "Kembang Sepatu (Hibiscus rosa-sinensis)",
+          "class_name": "Kelas: Dikotil (Malvaceae)",
+          "icon": "🌺",
+          "description": "Tanaman semak berkayu yang kerap menghiasi taman-taman fakultas di UNESA. Bunganya yang besar mencolok memiliki tangkai putik panjang yang menjadi daya tarik bagi kupu-kupu dan burung madu.",
+          "characteristics": "Bunga tunggal berkelipatan 5, daun menyirip dengan tepi bergerigi, mudah dibudidayakan melalui stek batang."
+        },
+        {
+          "id": 3,
+          "title": "Pohon Mangga (Mangifera indica)",
+          "class_name": "Kelas: Dikotil (Anacardiaceae)",
+          "icon": "🥭",
+          "description": "Banyak ditanam di pekarangan gedung kuliah dan taman kampus. Memiliki daun tunggal tebal menyirip serta tajuk lebat yang memberi keteduhan alami di cuaca tropis Surabaya yang panas.",
+          "characteristics": "Batang berkayu keras berkambium, getah bening, bunga majemuk dalam malai aromatik."
+        },
+        {
+          "id": 4,
+          "title": "Bambu Hias & Kuning (Bambusoideae)",
+          "class_name": "Kelas: Monokotil (Poaceae)",
+          "icon": "🎋",
+          "description": "Rumpun bambu kerap dimanfaatkan sebagai pembatas taman dan peredam kebisingan di jalan masuk kampus. Batangnya berongga dengan buku-buku cincin dan memiliki serat sangat kuat.",
+          "characteristics": "Tumbuhan monokotil berakar serabut rapat, pertumbuhan sangat cepat, daun bertulang sejajar."
+        },
+        {
+          "id": 5,
+          "title": "Rumput Teki (Cyperus rotundus)",
+          "class_name": "Kelas: Monokotil (Cyperaceae)",
+          "icon": "🌾",
+          "description": "Tumbuhan herba liar yang sering ditemukan di lapangan hijau dan tepi trotoar kampus UNESA. Memiliki umbi batang di dalam tanah yang membuatnya sangat tangguh bertahan pada musim kemarau.",
+          "characteristics": "Batang segitiga tanpa rongga, daun pita sejajar mengilap, perakaran serabut dengan stolon merayap."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Peran Tumbuhan dalam Ekosistem",
+      "cards": [
+        {
+          "id": 1,
+          "title": "Fotosintesis: Pabrik Oksigen Alami",
+          "class_name": "Fisiologi Tumbuhan",
+          "icon": "☀️",
+          "description": "Melalui klorofil di daun, tumbuhan menangkap sinar matahari, menyerap CO2 dari atmosfer, dan air dari tanah untuk memproduksi glukosa serta melepaskan oksigen (O2) bagi pernapasan makhluk hidup.",
+          "characteristics": "Reaksi terang dan gelap pada kloroplas menjadi fondasi utama seluruh energi biosfer bumi."
+        },
+        {
+          "id": 2,
+          "title": "Penyerap Emisi & Karbon Sinks",
+          "class_name": "Mitigasi Iklim",
+          "icon": "📉",
+          "description": "Vegetasi pepohonan di kawasan kampus UNESA berfungsi sebagai paru-paru kota Surabaya yang menyerap partikel debu kendaraan, gas buang sulfur/nitrogen, serta mereduksi efek pulau panas (Urban Heat Island).",
+          "characteristics": "Kanopi hijau menurunkan suhu udara mikro sekitar 2 hingga 4 derajat Celsius."
+        },
+        {
+          "id": 3,
+          "title": "Konservasi Tanah & Tata Air",
+          "class_name": "Hidrologi",
+          "icon": "💧",
+          "description": "Jejaring akar tumbuhan mengikat partikel tanah agar tidak mudah tererosi oleh air hujan deras, sekaligus memperbesar porositas tanah untuk meningkatkan laju infiltrasi cadangan air bawah tanah.",
+          "characteristics": "Mencegah genangan banjir dan menjaga ketersediaan sumur air bersih di musim kemarau."
+        },
+        {
+          "id": 4,
+          "title": "Penyedia Pangan & Habitat Satwa",
+          "class_name": "Jejaring Hayati",
+          "icon": "🦜",
+          "description": "Dedaunan, bunga, dan buah menjadi sumber nutrisi penting bagi ulat, lebah, burung, dan kelelawar. Percabangan pohon rindang juga menjadi lokasi bersarang yang aman dari predator darat.",
+          "characteristics": "Keanekaragaman flora secara langsung menentukan keragaman fauna yang mampu bertahan hidup."
+        },
+        {
+          "id": 5,
+          "title": "Kearifan Konservasi Kampus Hijau",
+          "class_name": "Keberlanjutan",
+          "icon": "🌿",
+          "description": "Menjaga ruang terbuka hijau UNESA bukan hanya tugas pengelola kampus, melainkan tanggung jawab bersama seluruh sivitas akademika: tidak merusak tanaman, hemat kertas, dan giat menanam vegetasi endemik.",
+          "characteristics": "Mewujudkan kampus berwawasan lingkungan menuju peradaban hijau generasi masa depan."
+        }
+      ]
+    }
+  ]
+}
