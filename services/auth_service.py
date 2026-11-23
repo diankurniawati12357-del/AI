@@ -68,16 +68,6 @@ def register_user(username: str, email: str, password: str) -> Tuple[bool, str]:
                 (username, email, pw_hash),
             )
             user_id = cursor.lastrowid
-            
-            # Unlock Chapter 1 by default for both Hewan and Tumbuhan
-            cursor.execute(
-                "INSERT OR IGNORE INTO chapter_progress (user_id, category, chapter_id, is_unlocked) VALUES (?, 'hewan', 1, 1);",
-                (user_id,),
-            )
-            cursor.execute(
-                "INSERT OR IGNORE INTO chapter_progress (user_id, category, chapter_id, is_unlocked) VALUES (?, 'tumbuhan', 1, 1);",
-                (user_id,),
-            )
             conn.commit()
             return True, "Pendaftaran berhasil! Silakan masuk dengan akun barumu."
     except Exception as e:
@@ -94,7 +84,8 @@ def authenticate_user(username: str, password: str) -> Tuple[bool, Optional[Dict
         with get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "SELECT id, username, email, password_hash, created_at FROM users WHERE username = ?;",
+                "SELECT id, username, email, password_hash, created_at, COALESCE(language, 'id') AS language "
+                "FROM users WHERE username = ?;",
                 (username,),
             )
             row = cursor.fetchone()
@@ -119,6 +110,7 @@ def authenticate_user(username: str, password: str) -> Tuple[bool, Optional[Dict
                 "email": row["email"],
                 "created_at": row["created_at"],
                 "stars": stars,
+                "language": row["language"],
             }
             return True, user_data, "Login berhasil!"
     except Exception as e:
@@ -131,7 +123,7 @@ def get_user_by_id(user_id: int) -> Optional[Dict[str, Any]]:
         with get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "SELECT id, username, email, created_at FROM users WHERE id = ?;",
+                "SELECT id, username, email, created_at, COALESCE(language, 'id') AS language FROM users WHERE id = ?;",
                 (user_id,),
             )
             row = cursor.fetchone()
@@ -150,6 +142,76 @@ def get_user_by_id(user_id: int) -> Optional[Dict[str, Any]]:
                 "email": row["email"],
                 "created_at": row["created_at"],
                 "stars": stars,
+                "language": row["language"],
             }
     except Exception:
         return None
+
+
+def get_or_create_oauth_user(
+    provider: str,
+    provider_subject: str,
+    email: str,
+    display_name: str,
+) -> Tuple[bool, Optional[Dict[str, Any]], str]:
+    """Links or creates a local profile using a stable provider subject."""
+    provider_subject = (provider_subject or "").strip()
+    email = (email or "").strip().lower()
+    display_name = (display_name or "").strip()
+    if not provider_subject:
+        return False, None, "Identitas Google tidak memiliki subject ID yang stabil."
+
+    try:
+        with get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT id, username, email, created_at, COALESCE(language, 'id') AS language FROM users "
+                "WHERE auth_provider = ? AND provider_subject = ?;",
+                (provider, provider_subject),
+            )
+            row = cursor.fetchone()
+
+            if not row:
+                base = re.sub(r"[^a-zA-Z0-9_]", "_", display_name or email.split("@")[0])
+                username = (base or "biova_user")[:28]
+                candidate = username
+                suffix = 1
+                while cursor.execute("SELECT id FROM users WHERE username = ?;", (candidate,)).fetchone():
+                    candidate = f"{username[:24]}_{suffix}"
+                    suffix += 1
+
+                if email:
+                    cursor.execute("SELECT id FROM users WHERE email = ?;", (email,))
+                    if cursor.fetchone():
+                        return False, None, "Email Google ini belum ditautkan. Masuk dengan akun lokal atau hubungkan melalui profil."
+
+                cursor.execute(
+                    "INSERT INTO users "
+                    "(username, email, password_hash, auth_provider, provider_subject) "
+                    "VALUES (?, ?, ?, ?, ?);",
+                    (candidate, email or f"{provider_subject}@provider.local", hash_password(os.urandom(16).hex()), provider, provider_subject),
+                )
+                user_id = cursor.lastrowid
+                conn.commit()
+                row = cursor.execute(
+                    "SELECT id, username, email, created_at, COALESCE(language, 'id') AS language "
+                    "FROM users WHERE id = ?;", (user_id,)
+                ).fetchone()
+
+            cursor.execute(
+                "SELECT COALESCE(SUM(stars_awarded), 0) AS total_stars "
+                "FROM reward_events WHERE user_id = ?;",
+                (row["id"],),
+            )
+            stars = cursor.fetchone()["total_stars"]
+            return True, {
+                "id": row["id"],
+                "username": row["username"],
+                "email": row["email"],
+                "created_at": row["created_at"],
+                "stars": stars,
+                "auth_provider": provider,
+                "language": row["language"],
+            }, "Login Google berhasil!"
+    except Exception as e:
+        return False, None, f"Terjadi kesalahan saat memproses login Google: {str(e)}"

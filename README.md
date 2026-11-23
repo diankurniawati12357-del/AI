@@ -18,10 +18,12 @@ Aplikasi web edukasi interaktif berbasis **Python Streamlit** dan **Artificial I
 3. **Interactive 3D Model Visualization:**
    - Penampil model 3D interaktif (.glb/.gltf) menggunakan `<model-viewer>` yang mendukung rotasi 360°, pembesaran (zoom), dan pemutaran animasi gerakan satwa.
 4. **Materi Pembelajaran Terstruktur:**
-   - 3 Bab untuk Hewan dan 3 Bab untuk Tumbuhan, masing-masing berisi 5 kartu edukasi dengan fakta biologis terverifikasi (tanpa teks palsu/Lorem Ipsum).
+   - Koleksi tanpa bab: 6 kartu materi Hewan dan 5 kartu materi Tumbuhan yang dapat dibuka langsung.
+   - Progres materi tersimpan per kartu untuk setiap pengguna.
 5. **Kuis Interaktif & Gamifikasi:**
-   - 5 soal pilihan ganda interaktif per bab dengan sistem penilaian langsung dan kotak pembahasan mendalam.
-   - Sistem perolehan bintang (+1 per soal baru, bonus +3 untuk nilai sempurna 5/5).
+   - Bank 30 soal bilingual untuk setiap kategori; 5 soal dan urutan pilihan diacak sekali per sesi.
+   - Sistem penilaian langsung, pembahasan, dan jawaban yang dinilai berdasarkan ID opsi.
+   - Sistem perolehan bintang (+1 per soal bank yang dijawab benar untuk pertama kali, bonus +3 untuk nilai sempurna pertama per kategori).
    - Sistem Tier Pengguna: Bronze, Silver (≥20 ⭐), Gold (≥60 ⭐), dan Platinum (≥100 ⭐ & ≥20 unggahan valid).
    - Papan Peringkat (Leaderboard) berbasis data riil SQLite.
 6. **Pembuatan Panorama (Image Stitching):**
@@ -81,7 +83,7 @@ WEB UAS/
 │   ├── edukasi_service.py      # Katalog taksonomi & deskripsi ilmiah
 │   ├── materi_service.py       # Pemuat data kartu materi
 │   ├── quiz_service.py         # Mesin penilaian kuis & kunci jawaban
-│   ├── game_service.py         # Perhitungan bintang, tier, & unlock bab
+│   ├── game_service.py         # Progres materi, bintang, & tier pengguna
 │   ├── leaderboard_service.py  # Query urutan peringkat pemain
 │   ├── model3d_service.py      # Pemetaan spesies ke aset berkas 3D
 │   ├── upload_service.py       # Validasi integritas gambar & hash
@@ -119,7 +121,7 @@ WEB UAS/
 │
 ├── data/                       # Basis data lokal (biova.db)
 ├── references/ui/              # 17 gambar referensi desain antarmuka
-└── tests/                      # Suite pengujian otomatis (20 unit tests)
+└── tests/                      # Suite pengujian otomatis (31 unit tests)
     ├── test_auth.py
     ├── test_classification.py
     ├── test_quiz.py
@@ -170,7 +172,7 @@ python -m unittest discover tests
 
 Hasil:
 ```text
-Ran 20 tests in 2.046s
+Ran 31 tests
 OK
 ```
 

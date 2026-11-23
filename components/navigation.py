@@ -3,7 +3,8 @@ Manages routing, page switching, bottom navigation bar, and back buttons.
 """
 
 import streamlit as st
-from services.config import COLOR_PRIMARY, COLOR_SECONDARY, COLOR_CARD, COLOR_BORDER
+from components.icons import render_icon
+from components.i18n import t
 
 
 def navigate_to(page: str, **kwargs):
@@ -14,42 +15,94 @@ def navigate_to(page: str, **kwargs):
     st.rerun()
 
 
-def render_back_button(target_page: str = "dashboard", label: str = "← Kembali"):
+def render_back_button(
+    target_page: str = "dashboard",
+    label: str | None = None,
+    *,
+    compact: bool = False,
+    key: str | None = None,
+    state_updates: dict[str, object] | None = None,
+):
     """Renders a friendly back button."""
-    col1, _ = st.columns([4, 6])
-    with col1:
+    label = label or t("nav.back")
+    if compact:
+        with st.container(key="biova-content-back"):
+            if st.button(
+                f"← {label}",
+                key=key or f"btn_back_to_{target_page}",
+                use_container_width=False,
+            ):
+                navigate_to(target_page, **(state_updates or {}))
+        return
+
+    icon_col, button_col, _ = st.columns([0.6, 3.4, 6])
+    with icon_col:
+        st.markdown(
+            f'<div class="biova-icon-action">{render_icon("kembali", 24, "biova-icon--button", "Kembali")}</div>',
+            unsafe_allow_html=True,
+        )
+    with button_col:
         if st.button(label, key=f"btn_back_to_{target_page}", use_container_width=False):
             navigate_to(target_page)
     st.markdown("<div style='margin-bottom: 8px;'></div>", unsafe_allow_html=True)
 
 
+_NAV_ITEMS = [
+    {
+        "key": "dashboard",
+        "label": "Beranda",
+        "icon": "beranda",
+        "page": "dashboard",
+        "matches": ("dashboard",),
+    },
+    {
+        "key": "learn",
+        "label": "Belajar",
+        "icon": "belajar",
+        "page": "learn",
+        "matches": ("learn", "learning", "lesson", "quiz", "quiz_result"),
+    },
+    {
+        "key": "leaderboard",
+        "label": "Peringkat",
+        "icon": "peringkat",
+        "page": "leaderboard",
+        "matches": ("leaderboard",),
+    },
+    {
+        "key": "profile",
+        "label": "Profil",
+        "icon": "profil",
+        "page": "profile",
+        "matches": ("profile",),
+    },
+]
+
+
 def render_bottom_nav(current_active: str = "dashboard"):
-    """Renders the in-app bottom navigation bar."""
-    st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
-    
-    col1, col2, col3, col4 = st.columns(4)
-    
-    with col1:
-        is_active = current_active == "dashboard"
-        btn_label = "🏠 Home" if is_active else "🏠"
-        if st.button("🏠 Home" if is_active else "🏠", key="nav_dash", use_container_width=True):
-            if current_active != "dashboard":
-                navigate_to("dashboard")
-                
-    with col2:
-        is_active = current_active in ["learn", "learning", "lesson", "quiz", "quiz_result"]
-        if st.button("📚 Belajar" if is_active else "📚", key="nav_learn", use_container_width=True):
-            if current_active != "learn":
-                navigate_to("learn")
-                
-    with col3:
-        is_active = current_active == "leaderboard"
-        if st.button("🏆 Skor" if is_active else "🏆", key="nav_lead", use_container_width=True):
-            if current_active != "leaderboard":
-                navigate_to("leaderboard")
-                
-    with col4:
-        is_active = current_active == "profile"
-        if st.button("👤 Profil" if is_active else "👤", key="nav_prof", use_container_width=True):
-            if current_active != "profile":
-                navigate_to("profile")
+    """Renders the in-app bottom navigation bar with native Streamlit buttons."""
+    current_page = st.session_state.get("current_page", current_active)
+    translated_labels = {
+        "dashboard": t("nav.dashboard"),
+        "learn": t("nav.learn"),
+        "leaderboard": t("nav.leaderboard"),
+        "profile": t("nav.profile"),
+    }
+    with st.container(key="biova-bottom-nav"):
+        columns = st.columns(4, gap="small")
+
+        for column, item in zip(columns, _NAV_ITEMS):
+            with column:
+                is_active = current_page in item["matches"]
+                item_label = translated_labels[item["key"]]
+                st.markdown(
+                    f'<div class="biova-icon-action">{render_icon(item["icon"], 22, "biova-icon--nav", item_label)}</div>',
+                    unsafe_allow_html=True,
+                )
+                if st.button(
+                    item_label,
+                    key=f"nav_{item['key']}",
+                    type="primary" if is_active else "secondary",
+                    use_container_width=True,
+                ) and current_page != item["page"]:
+                    navigate_to(item["page"])

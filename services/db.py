@@ -31,6 +31,18 @@ def init_db():
             );
         """)
 
+        # Additive migrations for bilingual profiles and provider identities.
+        cursor.execute("PRAGMA table_info(users);")
+        user_columns = {row["name"] for row in cursor.fetchall()}
+        if "language" not in user_columns:
+            cursor.execute("ALTER TABLE users ADD COLUMN language TEXT DEFAULT 'id';")
+        if "auth_provider" not in user_columns:
+            cursor.execute("ALTER TABLE users ADD COLUMN auth_provider TEXT DEFAULT 'local';")
+        if "provider_subject" not in user_columns:
+            cursor.execute("ALTER TABLE users ADD COLUMN provider_subject TEXT;")
+        if "profile_photo_path" not in user_columns:
+            cursor.execute("ALTER TABLE users ADD COLUMN profile_photo_path TEXT;")
+
         # Classification history table
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS classification_history (
@@ -72,6 +84,18 @@ def init_db():
                 is_unlocked BOOLEAN DEFAULT 0,
                 is_completed BOOLEAN DEFAULT 0,
                 UNIQUE(user_id, category, chapter_id),
+                FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+            );
+        """)
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS material_progress (
+                user_id INTEGER NOT NULL,
+                category TEXT NOT NULL,
+                material_id TEXT NOT NULL,
+                is_completed BOOLEAN NOT NULL DEFAULT 1,
+                completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (user_id, category, material_id),
                 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
             );
         """)

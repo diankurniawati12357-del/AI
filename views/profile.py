@@ -3,17 +3,26 @@ Displays account information, tier progression, collected stars, and logout cont
 """
 
 import streamlit as st
-from components.theme import apply_theme
+import base64
+import html
 from components.header import render_header
-from components.navigation import navigate_to, render_back_button, render_bottom_nav
+from components.icons import render_icon
+from components.navigation import navigate_to, render_bottom_nav
 from services.game_service import get_user_stats
-from services.config import COLOR_PRIMARY, COLOR_SECONDARY, COLOR_CARD, COLOR_BORDER, COLOR_HIGHLIGHT, COLOR_ERROR
+from components.i18n import t
+from services.profile_service import get_profile_photo_path, validate_and_save_profile_photo, remove_profile_photo
+
+
+_TIER_MEDALS = {
+    "Platinum": "medali_gold",
+    "Gold": "medali_gold",
+    "Silver": "medali_silver",
+    "Bronze": "medali_bronze",
+}
 
 
 def render_profile():
     """Renders the User Profile screen."""
-    apply_theme()
-
     user = st.session_state.get("authenticated_user")
     if not user:
         navigate_to("login")
@@ -23,67 +32,173 @@ def render_profile():
 
     stats = get_user_stats(user["id"])
 
+    username = html.escape(str(user["username"]), quote=True)
+    email = html.escape(str(user["email"]), quote=True)
+    tier_label = html.escape(str(stats["tier"]))
+    photo = get_profile_photo_path(user["id"])
+    if photo:
+        photo_data = base64.b64encode(photo.read_bytes()).decode("ascii")
+        avatar_html = (
+            f'<img class="biova-profile-avatar__image" src="data:image/png;base64,{photo_data}" '
+            f'alt="{username}">'
+        )
+    else:
+        avatar_html = render_icon(
+            "pengguna",
+            112,
+            "biova-icon--category",
+            t("profile.edit_photo"),
+        )
+
+    with st.container(key="biova-profile-card"):
+        st.markdown(
+            f"""
+            <div class="biova-profile-main">
+                <div class="biova-profile-avatar-wrap">
+                    <div class="biova-profile-avatar">{avatar_html}</div>
+                    <span class="biova-profile-edit-dot">✎</span>
+                </div>
+                <h2>{username}</h2>
+                <p class="biova-profile-email">{email}</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        with st.container(key="biova-profile-photo-toggle"):
+            if st.button(
+                t("profile.edit_photo"),
+                key="profile_photo_edit_toggle",
+                use_container_width=False,
+                type="secondary",
+            ):
+                st.session_state["profile_photo_edit_open"] = not st.session_state.get(
+                    "profile_photo_edit_open",
+                    False,
+                )
+
+        if st.session_state.get("profile_photo_edit_open", False):
+            with st.container(key="biova-profile-photo-editor"):
+                uploaded_photo = st.file_uploader(
+                    t("profile.edit_photo"),
+                    type=["jpg", "jpeg", "png", "webp"],
+                    accept_multiple_files=False,
+                    key="profile_photo_upload",
+                )
+                if uploaded_photo:
+                    preview = uploaded_photo.read()
+                    uploaded_photo.seek(0)
+                    st.image(preview, width=256, caption=t("profile.edit_photo"))
+                    save_col, cancel_col, remove_col = st.columns(3)
+                    with save_col:
+                        if st.button(t("profile.save_photo"), key="save_profile_photo", use_container_width=True):
+                            success, message, _ = validate_and_save_profile_photo(user["id"], uploaded_photo)
+                            if success:
+                                st.success(message)
+                                st.session_state["profile_photo_edit_open"] = False
+                                st.rerun()
+                            else:
+                                st.error(message)
+                    with cancel_col:
+                        if st.button(t("profile.cancel"), key="cancel_profile_photo", type="secondary", use_container_width=True):
+                            st.session_state["profile_photo_edit_open"] = False
+                            st.rerun()
+                    with remove_col:
+                        if st.button(t("profile.remove_photo"), key="remove_profile_photo", type="secondary", use_container_width=True):
+                            success, message = remove_profile_photo(user["id"])
+                            if success:
+                                st.success(message)
+                                st.rerun()
+                            else:
+                                st.error(message)
+
     st.markdown(
         f"""
-        <div style="text-align: center; margin-bottom: 18px;">
-            <div style="width: 72px; height: 72px; border-radius: 50%; background-color: {COLOR_PRIMARY}; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 28px; margin: 0 auto 10px auto; border: 3px solid {COLOR_HIGHLIGHT};">
-                {user['username'][0].upper()}
+        <section class="biova-profile-stats">
+            <div class="biova-profile-stat-grid">
+                <div class="biova-profile-stat">
+                    <div class="biova-profile-stat__icon">
+                        {render_icon("bintang", 40, "biova-icon--reward", t("common.total_stars"))}
+                    </div>
+                    <div class="biova-profile-stat__copy">
+                        <span>{t("common.total_stars")}</span>
+                        <strong>{stats["stars"]}</strong>
+                    </div>
+                </div>
+                <div class="biova-profile-stat">
+                    <div class="biova-profile-stat__icon">
+                        {render_icon(_TIER_MEDALS.get(stats["tier"], "bintang"), 40, "biova-icon--reward", t("profile.tier"))}
+                    </div>
+                    <div class="biova-profile-stat__copy">
+                        <span>{t("profile.tier")}</span>
+                        <strong>{tier_label}</strong>
+                    </div>
+                </div>
             </div>
-            <h2 style="font-size: 22px; font-weight: 800; color: {COLOR_PRIMARY}; margin: 0;">
-                {user['username']}
-            </h2>
-            <div style="font-size: 13px; color: #666666; margin-top: 2px;">
-                {user['email']}
-            </div>
-        </div>
+        </section>
         """,
         unsafe_allow_html=True,
     )
 
-    # Tier and Stars Banner
+    progress_message = (
+        t("profile.next_tier").format(stars=stats["stars_needed"])
+        if stats["stars_needed"] > 0
+        else t("profile.top_tier")
+    )
     st.markdown(
         f"""
-        <div class="biova-card" style="text-align: center; padding: 18px 16px;">
-            <div style="font-size: 13px; color: #666666; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">
-                Tingkat Petualang
+        <section class="biova-profile-activity">
+            <div class="biova-profile-activity__heading">
+                {render_icon("ensiklopedia", 26, "biova-icon--button", t("profile.activity"))}
+                <h3>{t("profile.activity")}</h3>
             </div>
-            <div style="font-size: 24px; font-weight: 900; color: {stats['tier_color']}; margin: 4px 0 6px 0;">
-                {stats['tier_icon']} {stats['tier']}
+            <div class="biova-profile-activity__items">
+                <div class="biova-profile-activity__item">
+                    {render_icon("ensiklopedia", 28, "biova-icon--button", t("profile.quizzes_taken"))}
+                    <span>{t("profile.quizzes_taken")}</span>
+                    <strong>{stats["quiz_count"]}</strong>
+                </div>
+                <div class="biova-profile-activity__item">
+                    {render_icon("gambar", 28, "biova-icon--button", t("profile.verified_photos"))}
+                    <span>{t("profile.verified_photos")}</span>
+                    <strong>{stats["upload_count"]}</strong>
+                </div>
+                <div class="biova-profile-activity__item">
+                    {render_icon("cek", 28, "biova-icon--button", t("profile.completed_material"))}
+                    <span>{t("profile.completed_material")}</span>
+                    <strong>{stats["completed_material"]}</strong>
+                </div>
             </div>
-            <div style="font-size: 18px; font-weight: 800; color: #D4AF37;">
-                {stats['stars']} ⭐ Total Bintang
-            </div>
-            {f"<div style='font-size: 11px; color: #777777; margin-top: 6px;'>Kumpulkan {stats['stars_needed']} bintang lagi untuk naik tier!</div>" if stats['stars_needed'] > 0 else "<div style='font-size: 11px; color: #198754; margin-top: 6px; font-weight: 700;'>Kamu sudah mencapai tier tertinggi!</div>"}
-        </div>
+            <p class="biova-profile-activity__progress">{html.escape(progress_message)}</p>
+        </section>
         """,
         unsafe_allow_html=True,
     )
-
-    # Activity Statistics Card
-    st.markdown(
-        f"""
-        <div class="biova-card">
-            <div style="font-weight: 800; font-size: 14px; color: {COLOR_PRIMARY}; margin-bottom: 10px;">
-                Aktivitas Eksplorasi
-            </div>
-            <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 13px;">
-                <span>📸 Foto Berhasil Terverifikasi:</span>
-                <strong>{stats['upload_count']} foto</strong>
-            </div>
-            <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px;">
-                <span>✏️ Kuis Dikerjakan:</span>
-                <strong>{stats['quiz_count']} kali</strong>
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
 
     # Logout Button
-    if st.button("🚪 Keluar dari Akun (Logout)", key="btn_logout", type="secondary", use_container_width=True):
-        st.session_state.clear()
-        navigate_to("welcome")
+    logout_icon, logout_button = st.columns([0.7, 9.3])
+    with logout_icon:
+        st.markdown(
+            f'<div class="biova-icon-action">{render_icon("keluar", 24, "biova-icon--button", "Keluar")}</div>',
+            unsafe_allow_html=True,
+        )
+    with logout_button:
+        if st.button(t("profile.logout"), key="btn_logout", type="secondary", use_container_width=True):
+            if getattr(st.user, "is_logged_in", False):
+                st.logout()
+                return
+            st.session_state["authenticated_user"] = None
+            st.session_state["is_authenticated"] = False
+            st.session_state["user_stars"] = 0
+            # Preserve the page-independent language preference on logout.
+            language = st.session_state.get("language", "id")
+            for key in list(st.session_state.keys()):
+                if key not in {"language"}:
+                    del st.session_state[key]
+            st.session_state["language"] = language
+            st.session_state["authenticated_user"] = None
+            st.session_state["is_authenticated"] = False
+            st.session_state["current_page"] = "welcome"
+            navigate_to("welcome")
 
     render_bottom_nav(current_active="profile")

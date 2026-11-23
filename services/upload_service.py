@@ -4,10 +4,12 @@ Validates uploaded image files (type, size, integrity) and computes unique hashe
 
 import hashlib
 import io
+import mimetypes
 from typing import Tuple, Optional
 from PIL import Image
 
-ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png"}
+ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png", "webp"}
+ALLOWED_MIME_TYPES = {"image/jpeg", "image/png", "image/webp"}
 MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB
 
 
@@ -23,6 +25,9 @@ def validate_and_process_upload(uploaded_file) -> Tuple[bool, str, Optional[Imag
     ext = filename.rsplit(".", 1)[-1] if "." in filename else ""
     if ext not in ALLOWED_EXTENSIONS:
         return False, f"Format file .{ext} tidak didukung. Harap unggah file JPG, JPEG, atau PNG.", None, ""
+    mime_type = getattr(uploaded_file, "type", "") or mimetypes.guess_type(filename)[0]
+    if mime_type not in ALLOWED_MIME_TYPES:
+        return False, "Jenis file gambar tidak valid.", None, ""
 
     # Check file size
     bytes_data = uploaded_file.getvalue()

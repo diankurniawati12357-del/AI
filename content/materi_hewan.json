@@ -6,7 +6,8 @@
       "cards": [
         {
           "id": 1,
-          "title": "Mamalia (Hewan Menyusui)",
+          "title": "Mamalia",
+          "class_id": "mamalia",
           "class_name": "Kelas: Mamalia",
           "icon": "🐾",
           "description": "Mamalia adalah vertebrata berdarah panas yang memiliki kelenjar susu untuk menyusui anaknya dan tubuh yang umumnya ditutupi rambut. Contoh mamalia di sekitar kita antara lain kucing, kelelawar, dan tupai pohon.",
@@ -14,7 +15,8 @@
         },
         {
           "id": 2,
-          "title": "Aves (Burung & Unggas)",
+          "title": "Aves",
+          "class_id": "aves",
           "class_name": "Kelas: Aves",
           "icon": "🕊️",
           "description": "Aves adalah kelompok vertebrata bertelur yang tubuhnya ditutupi bulu dan memiliki sayap untuk terbang atau meluncur. Di kampus UNESA sering terlihat burung gereja, burung gereja erasia, kutilang, dan merpati.",
@@ -22,7 +24,8 @@
         },
         {
           "id": 3,
-          "title": "Reptilia (Hewan Melata)",
+          "title": "Reptilia",
+          "class_id": "reptilia",
           "class_name": "Kelas: Reptilia",
           "icon": "🦎",
           "description": "Reptilia adalah hewan berdarah dingin yang bergerak secara melata dan kulitnya dilindungi oleh sisik kering berbahan keratin. Hewan reptil umum di lingkungan tropis meliputi cecak, kadal kebun, dan tokek.",
@@ -30,7 +33,8 @@
         },
         {
           "id": 4,
-          "title": "Amfibia (Hewan Dua Alam)",
+          "title": "Amfibi",
+          "class_id": "amfibi",
           "class_name": "Kelas: Amfibia",
           "icon": "🐸",
           "description": "Amfibia dapat hidup di darat dan air tawar. Fase larva (kecebong) hidup di air dengan insang, sedangkan fase dewasa bernapas dengan paru-paru dan kulit lembap. Contohnya adalah katak sawah dan kodok puru.",
@@ -38,11 +42,21 @@
         },
         {
           "id": 5,
-          "title": "Pisces & Invertebrata",
-          "class_name": "Kelas: Pisces & Invertebrata",
+          "title": "Pisces",
+          "class_id": "pisces",
+          "class_name": "Kelas: Pisces",
           "icon": "🐟",
-          "description": "Pisces (ikan) hidup di perairan dan bernapas dengan insang. Invertebrata merupakan kelompok hewan tanpa tulang belakang yang sangat kaya spesies, seperti kupu-kupu, capung, dan semut yang menjaga keseimbangan ekosistem.",
-          "characteristics": "Pisces bersirip dan bersisik lendir; Invertebrata memiliki eksoskeleton kitin atau tubuh lunak."
+          "description": "Pisces atau ikan hidup di perairan dan bernapas menggunakan insang. Tubuhnya dilengkapi sirip untuk bergerak dan umumnya berlapis sisik lendir.",
+          "characteristics": "Bernapas dengan insang, memiliki sirip, umumnya bersisik dan hidup akuatik."
+        },
+        {
+          "id": 6,
+          "title": "Invertebrata",
+          "class_id": "invertebrata",
+          "class_name": "Kelas: Invertebrata",
+          "icon": "🦋",
+          "description": "Invertebrata adalah kelompok hewan tanpa tulang belakang yang sangat kaya spesies, seperti kupu-kupu, capung, lebah, dan semut.",
+          "characteristics": "Tidak memiliki kolom tulang belakang; dapat memiliki eksoskeleton kitin atau tubuh lunak."
         }
       ]
     },

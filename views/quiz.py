@@ -1,19 +1,30 @@
-"""BIOVA Quiz View
-Matches KUIS.png, KUIS-1.png, and PEMBAHSAN KUIS.png with interactive questions,
-instant feedback, and detailed discussion boxes.
-"""
+"""BIOVA category quiz with session-stable randomized questions and options."""
+
+import html
 
 import streamlit as st
-from components.theme import apply_theme
+
 from components.header import render_header
+from components.i18n import localize_quiz_question, t
+from components.icons import render_icon
 from components.navigation import navigate_to, render_back_button, render_bottom_nav
-from services.quiz_service import get_questions, check_answer
+from components.theme import apply_theme
+from services.config import COLOR_ERROR, COLOR_PRIMARY
 from services.game_service import award_quiz_rewards
-from services.config import COLOR_PRIMARY, COLOR_SECONDARY, COLOR_CARD, COLOR_BORDER, COLOR_HIGHLIGHT, COLOR_ERROR
+from services.quiz_service import (
+    check_answer,
+    get_question_by_id,
+    initialize_quiz_session,
+)
+
+
+def _save_quiz_session(category: str, quiz_session: dict) -> None:
+    sessions = dict(st.session_state.get("quiz_sessions", {}))
+    sessions[category] = quiz_session
+    st.session_state["quiz_sessions"] = sessions
 
 
 def render_quiz():
-    """Renders the step-by-step quiz questions and discussion flow."""
     apply_theme()
 
     user = st.session_state.get("authenticated_user")
@@ -21,153 +32,183 @@ def render_quiz():
         navigate_to("login")
         return
 
-    render_back_button("learn", "← Keluar Kuis")
-
     category = st.session_state.get("quiz_category", "hewan")
-    chapter_id = st.session_state.get("quiz_chapter", 1)
-    q_index = st.session_state.get("quiz_q_index", 0)
+    if category not in ("hewan", "tumbuhan"):
+        category = "hewan"
+    sessions = st.session_state.get("quiz_sessions", {})
+    quiz_session = sessions.get(category)
+    if not quiz_session:
+        if st.session_state.get("quiz_start_error") or not initialize_quiz_session(
+            category, st.session_state
+        ):
+            render_header(show_stars=True)
+            st.error(t("quiz.unavailable"))
+            render_bottom_nav(current_active="learn")
+            return
+        quiz_session = st.session_state["quiz_sessions"][category]
 
-    cat_title = "Hewan" if category == "hewan" else "Tumbuhan"
+    render_back_button("learn", t("quiz.exit"))
+    render_header(show_stars=True)
 
-    questions = get_questions(category, chapter_id)
-    total_q = len(questions)
-
-    if total_q == 0:
-        st.info("Kuis untuk bab ini belum tersedia.")
-        return
-
-    # Check if quiz has reached beyond the last question
-    if q_index >= total_q:
+    question_ids = quiz_session["question_ids"]
+    total_questions = len(question_ids)
+    question_index = int(st.session_state.get("quiz_q_index", 0))
+    if question_index >= total_questions:
         navigate_to("quiz_result")
         return
 
-    current_q = questions[q_index]
+    question_id = question_ids[question_index]
+    question = get_question_by_id(category, question_id)
+    if question is None:
+        st.error(t("quiz.unavailable"))
+        render_bottom_nav(current_active="learn")
+        return
 
-    # Heading
+    display_question = localize_quiz_question(question)
+    language = st.session_state.get("language", "id")
+    category_title = t("category.animals") if category == "hewan" else t("category.plants")
+
     st.markdown(
         f"""
-        <div style="text-align: center; margin-bottom: 12px;">
-            <h2 style="font-size: 22px; font-weight: 800; color: {COLOR_PRIMARY}; margin: 0;">
-                Kuis {cat_title}
+        <div style="text-align:center;margin-bottom:12px;">
+            <h2 style="font-size:22px;font-weight:800;color:{COLOR_PRIMARY};margin:0;">
+                {html.escape(t("quiz.title").format(category=category_title))}
             </h2>
-            <div style="font-size: 12px; color: #555555; margin-top: 2px;">
-                Bab {chapter_id} • Soal {q_index + 1} dari {total_q}
+            <div style="font-size:12px;color:#555555;margin-top:2px;">
+                {t("quiz.question").format(current=question_index + 1, total=total_questions)}
             </div>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    # Progress Indicator Dots (1 to 5)
     dots_html = '<div class="quiz-dot-row">'
-    for i in range(total_q):
+    for index in range(total_questions):
         dot_class = "quiz-dot"
-        if i == q_index:
+        if index == question_index:
             dot_class += " active"
-        elif i < q_index:
+        elif index < question_index:
             dot_class += " done"
-        dots_html += f'<div class="{dot_class}">{i + 1}</div>'
-    dots_html += "</div>"
-    st.markdown(dots_html, unsafe_allow_html=True)
-
-    # Question Box
+        dots_html += f'<div class="{dot_class}">{index + 1}</div>'
+    st.markdown(dots_html + "</div>", unsafe_allow_html=True)
     st.markdown(
         f"""
-        <div class="biova-card" style="margin-bottom: 14px;">
-            <div style="font-size: 16px; font-weight: 800; color: {COLOR_PRIMARY}; line-height: 1.4;">
-                {current_q.get('question', '')}
+        <div class="biova-card" style="margin-bottom:14px;">
+            <div style="font-size:16px;font-weight:800;color:{COLOR_PRIMARY};line-height:1.4;">
+                {html.escape(display_question["question"])}
             </div>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    options = current_q.get("options", [])
-    q_key = f"quiz_{category}_{chapter_id}_q_{q_index}"
-    checked_key = f"checked_{category}_{chapter_id}_q_{q_index}"
-
-    is_checked = st.session_state.get(checked_key, False)
-
-    # Radio options for multiple choice
-    user_choice = st.radio(
-        "Pilih jawabanmu:",
-        options,
-        key=f"radio_{q_key}",
-        index=None if not is_checked and q_key not in st.session_state else (
-            options.index(st.session_state[q_key]) if q_key in st.session_state and st.session_state[q_key] in options else None
-        ),
+    answers = dict(quiz_session.get("answers", {}))
+    checked_ids = set(quiz_session.get("checked_ids", []))
+    is_checked = question_id in checked_ids
+    option_order = quiz_session["option_orders"][question_id]
+    displayed_options = display_question["options"]
+    option_labels = {
+        option_id: f"{option_id}. {text}"
+        for option_id, text in displayed_options.items()
+    }
+    widget_key = f"quiz_{quiz_session['session_id']}_{question_id}"
+    selected_option_id = st.radio(
+        t("quiz.choose"),
+        option_order,
+        format_func=lambda option_id: option_labels[option_id],
+        key=widget_key,
+        index=option_order.index(answers[question_id])
+        if question_id in answers and answers[question_id] in option_order
+        else None,
         disabled=is_checked,
         label_visibility="collapsed",
     )
+    st.markdown("<div style='height:10px;'></div>", unsafe_allow_html=True)
 
-    st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
-
-    # If NOT checked yet: show "Cek Jawaban"
     if not is_checked:
-        if st.button("Cek Jawaban", key=f"btn_check_{q_index}", use_container_width=True):
-            if not user_choice:
-                st.warning("Silakan pilih salah satu jawaban terlebih dahulu.")
+        st.markdown(
+            f'<div class="biova-icon-action">{render_icon("cek", 22, "biova-icon--button", t("quiz.check"))}</div>',
+            unsafe_allow_html=True,
+        )
+        if st.button(t("quiz.check"), key=f"btn_check_{widget_key}", use_container_width=True):
+            if selected_option_id is None:
+                st.warning(t("quiz.choose_warning"))
             else:
-                st.session_state[q_key] = user_choice
-                st.session_state[checked_key] = True
-
-                # Check accuracy
-                is_correct, correct_ans, explanation = check_answer(category, chapter_id, q_index, user_choice)
-                if is_correct:
-                    # Increment running score
-                    st.session_state["quiz_score"] = st.session_state.get("quiz_score", 0) + 1
-
+                answers[question_id] = selected_option_id
+                checked_ids.add(question_id)
+                quiz_session["answers"] = answers
+                quiz_session["checked_ids"] = list(checked_ids)
+                _save_quiz_session(category, quiz_session)
                 st.rerun()
-
     else:
-        # ALREADY CHECKED: Show feedback and discussion (Matches PEMBAHSAN KUIS.png)
-        saved_answer = st.session_state.get(q_key, "")
-        is_correct, correct_ans, explanation = check_answer(category, chapter_id, q_index, saved_answer)
-
+        selected_answer = answers[question_id]
+        is_correct, correct_option_id, explanation = check_answer(
+            category, question_id, selected_answer
+        )
+        explanation_text = explanation.get(language, explanation.get("id", ""))
         if is_correct:
             st.markdown(
                 f"""
-                <div style="background-color: #D1E7DD; border-left: 4px solid #198754; border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; font-weight: 700; color: #0F5132; font-size: 14px;">
-                    ✅ Jawabanmu Benar!
+                <div style="background:#D1E7DD;border-left:4px solid #198754;border-radius:10px;padding:10px 14px;margin-bottom:12px;font-weight:700;color:#0F5132;font-size:14px;">
+                    {render_icon("cek", 22, "biova-icon--button", t("quiz.correct"))} {t("quiz.correct")}
                 </div>
                 """,
                 unsafe_allow_html=True,
             )
         else:
+            correct_text = html.escape(option_labels[correct_option_id])
             st.markdown(
                 f"""
-                <div style="background-color: #F8D7DA; border-left: 4px solid {COLOR_ERROR}; border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; font-weight: 700; color: #842029; font-size: 14px;">
-                    ❌ Jawabanmu Kurang Tepat. Jawaban yang benar adalah: <strong>{correct_ans}</strong>
+                <div style="background:#F8D7DA;border-left:4px solid {COLOR_ERROR};border-radius:10px;padding:10px 14px;margin-bottom:12px;font-weight:700;color:#842029;font-size:14px;">
+                    {render_icon("info", 22, "biova-icon--button", t("quiz.incorrect"))}
+                    {t("quiz.incorrect")} {t("quiz.correct_answer")} <strong>{correct_text}</strong>
                 </div>
                 """,
                 unsafe_allow_html=True,
             )
 
-        # Discussion box matching screenshot
         st.markdown(
             f"""
             <div class="discussion-box">
-                <div style="font-weight: 800; font-size: 14px; color: {COLOR_PRIMARY}; margin-bottom: 4px;">
-                    💡 Pembahasan:
+                <div style="font-weight:800;font-size:14px;color:{COLOR_PRIMARY};margin-bottom:4px;">
+                    {render_icon("info", 22, "biova-icon--button", t("quiz.discussion"))} {t("quiz.discussion")}
                 </div>
-                <div style="font-size: 13px; color: #2E332F; line-height: 1.5;">
-                    {explanation}
+                <div style="font-size:13px;color:#2E332F;line-height:1.5;">
+                    {html.escape(explanation_text)}
                 </div>
             </div>
             """,
             unsafe_allow_html=True,
         )
 
-        # Button to proceed to next question or view results
-        next_label = "Berikutnya →" if (q_index + 1 < total_q) else "Lihat Hasil Kuis 🏆"
-        if st.button(next_label, key=f"btn_next_{q_index}", use_container_width=True):
-            if q_index + 1 < total_q:
-                st.session_state["quiz_q_index"] = q_index + 1
+        is_final_question = question_index + 1 == total_questions
+        next_label = t("quiz.result") if is_final_question else t("quiz.next")
+        if is_final_question:
+            st.markdown(
+                f'<div class="biova-icon-action">{render_icon("piala", 24, "biova-icon--button", t("quiz.result"))}</div>',
+                unsafe_allow_html=True,
+            )
+        if st.button(next_label, key=f"btn_next_{widget_key}", use_container_width=True):
+            if not is_final_question:
+                st.session_state["quiz_q_index"] = question_index + 1
                 st.rerun()
             else:
-                # Final question complete -> calculate rewards and unlock chapter
-                final_score = st.session_state.get("quiz_score", 0)
-                stars_won = award_quiz_rewards(user["id"], category, chapter_id, final_score, total_q)
+                correct_question_ids = [
+                    selected_id
+                    for selected_id in question_ids
+                    if check_answer(category, selected_id, answers[selected_id])[0]
+                ]
+                score = len(correct_question_ids)
+                stars_won = award_quiz_rewards(
+                    user["id"],
+                    category,
+                    score=score,
+                    max_questions=total_questions,
+                    question_ids=correct_question_ids,
+                )
                 st.session_state["last_quiz_stars_won"] = stars_won
-                st.session_state["last_quiz_final_score"] = final_score
+                st.session_state["last_quiz_final_score"] = score
+                st.session_state["last_quiz_total_questions"] = total_questions
                 navigate_to("quiz_result")
+
+    render_bottom_nav(current_active="learn")

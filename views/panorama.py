@@ -1,14 +1,11 @@
 """BIOVA Panorama View (Image Stitching)
-Matches IMAGE STITCHING.png across three states:
-1. Upload & Select Images
-2. Review Selected Photos Grid
-3. Panorama Output / Stitching Failure with OpenCV Stitcher
+Three states: Upload/Select, Review Grid, and Panorama Output / Failure
+Uses OpenCV Stitcher for image compositing.
 """
 
 import streamlit as st
 from PIL import Image
-from components.theme import apply_theme
-from components.mascot import render_mascot
+from components.icons import render_icon
 from components.navigation import navigate_to, render_back_button, render_bottom_nav
 from services.upload_service import validate_and_process_upload
 from services.stitching_service import stitch_images, get_image_download_bytes
@@ -17,16 +14,14 @@ from services.config import COLOR_PRIMARY, COLOR_SECONDARY, COLOR_CARD, COLOR_BO
 
 def render_panorama():
     """Renders the three-state OpenCV image stitching workflow."""
-    apply_theme()
-
     user = st.session_state.get("authenticated_user")
     if not user:
         navigate_to("login")
         return
 
-    render_back_button("dashboard", "← Kembali ke Beranda")
+    render_back_button("dashboard", "Kembali ke Beranda")
 
-    # Panorama state in session
+    # Panorama state
     if "panorama_images" not in st.session_state:
         st.session_state["panorama_images"] = []
     if "panorama_result" not in st.session_state:
@@ -34,12 +29,17 @@ def render_panorama():
     if "panorama_error" not in st.session_state:
         st.session_state["panorama_error"] = None
 
-    # STATE 3: RESULT VIEW
+    # ===== STATE 3: RESULT VIEW =====
     if st.session_state["panorama_result"] is not None:
         stitched_img = st.session_state["panorama_result"]
 
         st.markdown('<div class="biova-card">', unsafe_allow_html=True)
-        render_mascot("success", width=120, center=True)
+
+        st.markdown(
+            f'<div style="text-align:center;margin:8px 0 12px;">'
+            f'{render_icon("cek", 52, "biova-icon--heading", "Panorama berhasil")}</div>',
+            unsafe_allow_html=True,
+        )
 
         st.markdown(
             f"""
@@ -62,15 +62,28 @@ def render_panorama():
         col_d1, col_d2 = st.columns(2)
         with col_d1:
             img_bytes = get_image_download_bytes(stitched_img, format="JPEG")
+            st.markdown(
+                f'<div class="biova-icon-action">{render_icon("unggah", 22, "biova-icon--button", "Unduh gambar")}</div>',
+                unsafe_allow_html=True,
+            )
             st.download_button(
-                label="📥 Unduh Gambar",
+                label="Unduh Gambar",
                 data=img_bytes,
                 file_name="biova_panorama.jpg",
                 mime="image/jpeg",
                 use_container_width=True,
             )
         with col_d2:
-            if st.button("🔄 Buat Panorama Baru", key="btn_reset_panorama", type="secondary", use_container_width=True):
+            st.markdown(
+                f'<div class="biova-icon-action">{render_icon("restart", 22, "biova-icon--button", "Panorama baru")}</div>',
+                unsafe_allow_html=True,
+            )
+            if st.button(
+                "Buat Panorama Baru",
+                key="btn_reset_panorama",
+                type="secondary",
+                use_container_width=True,
+            ):
                 st.session_state["panorama_images"] = []
                 st.session_state["panorama_result"] = None
                 st.session_state["panorama_error"] = None
@@ -79,11 +92,11 @@ def render_panorama():
         render_bottom_nav(current_active="dashboard")
         return
 
-    # Heading for States 1 & 2
+    # ===== Heading for States 1 & 2 =====
     st.markdown(
         f"""
         <div style="text-align: center; margin-bottom: 16px;">
-            <div style="font-size: 32px; margin-bottom: 4px;">🌄</div>
+            <div style="margin-bottom:4px;">{render_icon("gambar", 48, "biova-icon--heading", "Panorama")}</div>
             <h2 style="font-size: 22px; font-weight: 800; color: {COLOR_PRIMARY}; margin: 0;">
                 Buat Panorama
             </h2>
@@ -95,13 +108,14 @@ def render_panorama():
         unsafe_allow_html=True,
     )
 
-    # Show stitching failure message if occurred
+    # Stitching failure message
     if st.session_state["panorama_error"]:
         st.markdown(
             f"""
             <div class="biova-card" style="border-left: 4px solid {COLOR_ERROR}; padding: 12px 14px; margin-bottom: 14px;">
                 <div style="font-weight: 800; font-size: 13px; color: {COLOR_ERROR};">
-                    ⚠️ Penggabungan Belum Berhasil
+                    {render_icon("info", 22, "biova-icon--button", "Penggabungan belum berhasil")}
+                    Penggabungan Belum Berhasil
                 </div>
                 <div style="font-size: 12px; color: #444444; margin-top: 2px;">
                     {st.session_state["panorama_error"]}
@@ -132,12 +146,12 @@ def render_panorama():
 
     images = st.session_state["panorama_images"]
 
-    # STATE 1: Empty state
+    # ===== STATE 1: Empty =====
     if len(images) == 0:
         st.markdown(
             f"""
             <div class="biova-card" style="text-align: center; padding: 36px 20px; border-style: dashed;">
-                <div style="font-size: 40px; margin-bottom: 8px;">📷</div>
+                <div style="margin-bottom:8px;">{render_icon("kamera", 56, "biova-icon--heading", "Foto panorama")}</div>
                 <div style="font-weight: 700; font-size: 15px; color: {COLOR_PRIMARY};">
                     Belum ada foto dipilih
                 </div>
@@ -149,7 +163,7 @@ def render_panorama():
             unsafe_allow_html=True,
         )
 
-    # STATE 2: Selected images preview grid
+    # ===== STATE 2: Preview Grid =====
     else:
         st.markdown(
             f"""
@@ -160,7 +174,6 @@ def render_panorama():
             unsafe_allow_html=True,
         )
 
-        # Show thumbnail preview grid
         cols = st.columns(min(len(images), 3))
         for idx, img in enumerate(images):
             with cols[idx % 3]:
@@ -170,7 +183,11 @@ def render_panorama():
 
         col_act1, col_act2 = st.columns([6, 4])
         with col_act1:
-            if st.button("✨ Gabungkan Foto", key="btn_stitch_run", use_container_width=True):
+            st.markdown(
+                f'<div class="biova-icon-action">{render_icon("gambar", 22, "biova-icon--button", "Gabungkan foto")}</div>',
+                unsafe_allow_html=True,
+            )
+            if st.button("Gabungkan Foto", key="btn_stitch_run", use_container_width=True):
                 if len(images) < 2:
                     st.warning("Silakan pilih minimal 2 foto.")
                 else:
@@ -185,7 +202,11 @@ def render_panorama():
                             st.rerun()
 
         with col_act2:
-            if st.button("🗑️ Reset", key="btn_stitch_clear", type="secondary", use_container_width=True):
+            st.markdown(
+                f'<div class="biova-icon-action">{render_icon("tutup", 22, "biova-icon--button", "Reset")}</div>',
+                unsafe_allow_html=True,
+            )
+            if st.button("Reset", key="btn_stitch_clear", type="secondary", use_container_width=True):
                 st.session_state["panorama_images"] = []
                 st.session_state["panorama_error"] = None
                 st.rerun()

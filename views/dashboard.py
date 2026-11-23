@@ -4,17 +4,15 @@ Panorama banner, and bottom navigation.
 """
 
 import streamlit as st
-from components.theme import apply_theme
 from components.header import render_header
 from components.navigation import navigate_to, render_bottom_nav
 from components.cards import render_category_card, render_panorama_banner
-from services.config import COLOR_PRIMARY, COLOR_SECONDARY
+from services.config import COLOR_PRIMARY
+from components.i18n import t
 
 
 def render_dashboard():
     """Renders the primary Dashboard screen."""
-    apply_theme()
-
     # Route protection
     user = st.session_state.get("authenticated_user")
     if not user:
@@ -27,43 +25,43 @@ def render_dashboard():
     # Main Headline
     st.markdown(
         f"""
-        <div style="margin-bottom: 18px;">
-            <h2 style="font-size: 22px; font-weight: 800; color: {COLOR_PRIMARY}; margin: 0;">
-                Yuk, Jelajahi Sekitarmu!
+        <div class="biova-home-heading">
+            <h2 style="color: {COLOR_PRIMARY};">
+                {t("welcome.headline")}
             </h2>
-            <p style="font-size: 13px; color: #555555; margin-top: 4px;">
-                Pilih kategori untuk mengenali flora dan fauna di kampus UNESA:
+            <p>
+                {t("welcome.category_prompt")}
             </p>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    def on_category_click(cat: str):
-        st.session_state["selected_category"] = cat
-        navigate_to("scan")
+    def explore_category(category: str):
+        st.session_state["selected_category"] = category
+        st.session_state["learning_category"] = category
+        navigate_to("learn")
 
-    # Category 1: HEWAN
-    render_category_card(
-        category_id="hewan",
-        title="Hewan",
-        icon="🐾",
-        description="Kenali berbagai jenis hewan di sekitarmu melalui foto satwa.",
-        on_click_callback=on_category_click,
-    )
-
-    st.markdown("<div style='height: 6px;'></div>", unsafe_allow_html=True)
-
-    # Category 2: TUMBUHAN
-    render_category_card(
-        category_id="tumbuhan",
-        title="Tumbuhan",
-        icon="🌿",
-        description="Kenali keanekaragaman tumbuhan di sekitarmu melalui foto daun atau pohon.",
-        on_click_callback=on_category_click,
-    )
-
-    st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+    with st.container(key="biova-home-categories"):
+        animal_col, plant_col = st.columns(2, gap="small")
+        with animal_col:
+            render_category_card(
+                category_id="hewan",
+                title=t("category.animals"),
+                icon="maskot_BIOVA.png",
+                description=t("category.animals_description"),
+                action_label=t("home.explore_animals"),
+                on_explore_callback=explore_category,
+            )
+        with plant_col:
+            render_category_card(
+                category_id="tumbuhan",
+                title=t("category.plants"),
+                icon="tumbuhan",
+                description=t("category.plants_description"),
+                action_label=t("home.explore_plants"),
+                on_explore_callback=explore_category,
+            )
 
     # Panorama Banner
     def on_panorama_click():

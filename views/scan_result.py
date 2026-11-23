@@ -1,12 +1,13 @@
 """BIOVA Classification Result View
-Displays detection outcome with either success (happy mascot, description, 3D viewer)
-or failure states (sad mascot, informative guidance).
+Displays detection outcome with success or failure states.
+Uses placeholder where mascot was previously rendered.
 """
 
 import streamlit as st
 from components.theme import apply_theme
-from components.mascot import render_mascot
+from components.icons import render_icon, get_animal_class_icon
 from components.navigation import navigate_to, render_back_button, render_bottom_nav
+from components.header import render_header
 from components.three_d_viewer import render_3d_viewer
 from services.edukasi_service import get_education_info
 from services.model3d_service import get_model3d_info
@@ -22,7 +23,8 @@ def render_scan_result():
         navigate_to("login")
         return
 
-    render_back_button("scan", "← Kembali ke Pemindaian")
+    render_back_button("scan", "Kembali ke Pemindaian")
+    render_header(show_stars=True)
 
     res = st.session_state.get("last_scan_result", None)
     img = st.session_state.get("last_scan_image", None)
@@ -37,31 +39,41 @@ def render_scan_result():
     category = res.get("category", "hewan")
 
     if status == "success":
-        # SUCCESS STATE (Matches KLASIFIKASI HEWAN-1.png & KLASIFIKASI HEWAN-2.png)
+        # ===== SUCCESS STATE =====
         pred_group = res.get("predicted_group", "Spesies")
         confidence = res.get("confidence", 0.0)
         edu_info = get_education_info(category, pred_group)
+        animal_icon = None
+        if category == "hewan":
+            animal_icon, normalized_group = get_animal_class_icon(pred_group)
+        else:
+            normalized_group = ""
 
-        # Star notification if awarded
+        # Star notification
         if st.session_state.get("upload_star_awarded", False):
             st.markdown(
                 """
                 <div style="background-color: #CFDFA6; border: 1.5px solid #416848; border-radius: 14px; padding: 8px 14px; text-align: center; margin-bottom: 12px; font-weight: 700; color: #263C2B; font-size: 13px;">
-                    🎉 Selamat! Kamu mendapatkan <strong>+1 Bintang ⭐</strong> dari foto baru ini!
+                    {render_icon("cek", 22, "biova-icon--button", "Berhasil")}
+                    Selamat! Kamu mendapatkan <strong>+1 {render_icon("bintang", 22, "biova-icon--reward", "Bintang")}</strong> dari foto baru ini!
                 </div>
                 """,
                 unsafe_allow_html=True,
             )
 
-        # Main Cream Container
+        # Main Container
         st.markdown('<div class="biova-card">', unsafe_allow_html=True)
 
-        # Top Success Mascot
-        render_mascot("success", width=110, center=True)
+        st.markdown(
+            f'<div style="text-align:center;margin:8px 0 12px;">'
+            f'{render_icon("cek", 56, "biova-icon--heading", "Identifikasi berhasil")}</div>',
+            unsafe_allow_html=True,
+        )
 
         st.markdown(
             f"""
             <div style="text-align: center; margin-bottom: 14px;">
+                {f'<div class="biova-animal-result-icon biova-icon-enter" key="animal-{normalized_group}">{render_icon(animal_icon, 104, "biova-icon--result", pred_group)}</div>' if animal_icon else ""}
                 <div style="font-size: 13px; font-weight: 700; color: {COLOR_SECONDARY}; text-transform: uppercase; letter-spacing: 0.5px;">
                     Objek Berhasil Terdeteksi!
                 </div>
@@ -119,19 +131,30 @@ def render_scan_result():
         # Action Buttons
         col1, col2 = st.columns(2)
         with col1:
-            if st.button("📚 Pelajari Lebih Lanjut", key="btn_res_learn", use_container_width=True):
+            st.markdown(
+                f'<div class="biova-icon-action">{render_icon("ensiklopedia", 22, "biova-icon--button", "Pelajari")}</div>',
+                unsafe_allow_html=True,
+            )
+            if st.button("Pelajari Lebih Lanjut", key="btn_res_learn", use_container_width=True):
                 st.session_state["selected_learning_category"] = category
                 navigate_to("learn")
         with col2:
-            if st.button("🔄 Ubah Gambar", key="btn_res_change_succ", type="secondary", use_container_width=True):
+            st.markdown(
+                f'<div class="biova-icon-action">{render_icon("gambar", 22, "biova-icon--button", "Ubah gambar")}</div>',
+                unsafe_allow_html=True,
+            )
+            if st.button("Ubah Gambar", key="btn_res_change_succ", type="secondary", use_container_width=True):
                 navigate_to("scan")
 
     else:
-        # FAILURE / UNRECOGNIZED STATE (Matches KLASIFIKASI HEWAN-3.png)
+        # ===== FAILURE / UNRECOGNIZED STATE =====
         st.markdown('<div class="biova-card">', unsafe_allow_html=True)
 
-        # Sad crying frog mascot
-        render_mascot("sad", width=120, center=True)
+        st.markdown(
+            f'<div style="text-align:center;margin:8px 0 12px;">'
+            f'{render_icon("info", 52, "biova-icon--heading", "Belum dikenali")}</div>',
+            unsafe_allow_html=True,
+        )
 
         error_title = "Objek Belum Dapat Dikenali!"
         error_msg = res.get("message", "Kami belum dapat mengenali objek pada gambar ini.")
@@ -146,7 +169,7 @@ def render_scan_result():
                     {error_msg}
                 </p>
                 <div style="font-size: 12px; color: #666666; background: rgba(255,255,255,0.7); border-radius: 12px; padding: 10px; text-align: left;">
-                    💡 <strong>Tips foto lebih akurat:</strong>
+                    {render_icon("info", 22, "biova-icon--button", "Tips")} <strong>Tips foto lebih akurat:</strong>
                     <ul style="margin: 4px 0 0 18px; padding: 0;">
                         <li>Pastikan pencahayaan terang dan objek terlihat fokus.</li>
                         <li>Ambil foto dari jarak yang cukup dekat dengan objek utama.</li>
@@ -160,8 +183,11 @@ def render_scan_result():
 
         st.markdown("</div>", unsafe_allow_html=True)
 
-        # Single action button to change image
-        if st.button("🔄 Ubah Gambar", key="btn_res_change_fail", use_container_width=True):
+        st.markdown(
+            f'<div class="biova-icon-action">{render_icon("gambar", 22, "biova-icon--button", "Ubah gambar")}</div>',
+            unsafe_allow_html=True,
+        )
+        if st.button("Ubah Gambar", key="btn_res_change_fail", use_container_width=True):
             navigate_to("scan")
 
     render_bottom_nav(current_active="dashboard")

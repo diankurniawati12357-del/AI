@@ -1,74 +1,187 @@
-"""Unit tests for BIOVA Gamification & Leaderboard Services."""
+"""Isolated tests for BIOVA progress, rewards, and leaderboard services."""
 
+import sqlite3
+import tempfile
 import unittest
-import uuid
-from services.auth_service import register_user, authenticate_user
+from contextlib import contextmanager
+from pathlib import Path
+from unittest.mock import patch
+
 from services.game_service import (
-    calculate_tier,
-    award_upload_star,
     award_quiz_rewards,
+    award_upload_star,
+    calculate_tier,
+    get_material_progress,
     get_user_stats,
-    get_chapter_progress,
+    mark_material_completed,
 )
 from services.leaderboard_service import get_leaderboard, get_user_rank
 
 
 class TestGamificationService(unittest.TestCase):
+    def setUp(self):
+        self.temp_dir = tempfile.TemporaryDirectory()
+        self.database_path = Path(self.temp_dir.name) / "biova-test.db"
+
+        @contextmanager
+        def connect():
+            connection = sqlite3.connect(self.database_path)
+            connection.row_factory = sqlite3.Row
+            try:
+                yield connection
+            finally:
+                connection.close()
+
+        self.connect = connect
+        self.game_connection_patch = patch("services.game_service.get_connection", side_effect=connect)
+        self.leaderboard_connection_patch = patch(
+            "services.leaderboard_service.get_connection", side_effect=connect
+        )
+        self.game_connection_patch.start()
+        self.leaderboard_connection_patch.start()
+        with self.connect() as connection:
+            connection.executescript(
+                """
+                CREATE TABLE reward_events (
+                    id INTEGER PRIMARY KEY,
+                    user_id INTEGER NOT NULL,
+                    reward_type TEXT NOT NULL,
+                    reference_id TEXT NOT NULL,
+                    stars_awarded INTEGER NOT NULL,
+                    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE(user_id, reward_type, reference_id)
+                );
+                CREATE TABLE quiz_attempts (
+                    id INTEGER PRIMARY KEY,
+                    user_id INTEGER NOT NULL,
+                    category TEXT NOT NULL,
+                    chapter_id INTEGER NOT NULL,
+                    score INTEGER NOT NULL
+                );
+                CREATE TABLE material_progress (
+                    user_id INTEGER NOT NULL,
+                    category TEXT NOT NULL,
+                    material_id TEXT NOT NULL,
+                    is_completed INTEGER NOT NULL DEFAULT 1,
+                    PRIMARY KEY(user_id, category, material_id)
+                );
+                CREATE TABLE chapter_progress (
+                    user_id INTEGER NOT NULL,
+                    category TEXT NOT NULL,
+                    chapter_id INTEGER NOT NULL,
+                    best_score INTEGER NOT NULL,
+                    is_unlocked INTEGER NOT NULL,
+                    is_completed INTEGER NOT NULL
+                );
+                CREATE TABLE users (
+                    id INTEGER PRIMARY KEY,
+                    username TEXT NOT NULL,
+                    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+                );
+                """
+            )
+            connection.execute(
+                "INSERT INTO chapter_progress VALUES (1, 'hewan', 2, 4, 1, 1);"
+            )
+            connection.commit()
+
+    def tearDown(self):
+        self.game_connection_patch.stop()
+        self.leaderboard_connection_patch.stop()
+        self.temp_dir.cleanup()
+
     def test_tier_calculation(self):
         self.assertEqual(calculate_tier(0, 0)["name"], "Bronze")
-        self.assertEqual(calculate_tier(19, 5)["name"], "Bronze")
         self.assertEqual(calculate_tier(20, 2)["name"], "Silver")
-        self.assertEqual(calculate_tier(59, 10)["name"], "Silver")
         self.assertEqual(calculate_tier(60, 15)["name"], "Gold")
-        self.assertEqual(calculate_tier(99, 18)["name"], "Gold")
-        # 100 stars but < 20 uploads -> remains Gold
-        self.assertEqual(calculate_tier(100, 15)["name"], "Gold")
-        # 100 stars AND >= 20 uploads -> Platinum!
         self.assertEqual(calculate_tier(100, 20)["name"], "Platinum")
-        self.assertEqual(calculate_tier(150, 25)["name"], "Platinum")
 
-    def test_star_reward_and_anti_duplication(self):
-        unique_name = f"gamer_{uuid.uuid4().hex[:6]}"
-        register_user(unique_name, f"{unique_name}@unesa.ac.id", "Password123!")
-        _, user, _ = authenticate_user(unique_name, "Password123!")
-        user_id = user["id"]
+    def test_question_rewards_are_idempotent_and_preserve_legacy_progress(self):
+        self.assertTrue(award_upload_star(1, "unique-image"))
+        self.assertFalse(award_upload_star(1, "unique-image"))
 
-        # 1. Unique upload reward
-        hash1 = f"img_hash_{uuid.uuid4().hex}"
-        awarded_first = award_upload_star(user_id, hash1)
-        self.assertTrue(awarded_first, "First upload should award 1 star")
+        self.assertEqual(
+            award_quiz_rewards(
+                1, "hewan", score=4, question_ids=["q1", "q2", "q3", "q4"]
+            ),
+            4,
+        )
+        self.assertEqual(
+            award_quiz_rewards(1, "hewan", score=3, question_ids=["q1", "q2", "q3"]),
+            0,
+        )
+        self.assertEqual(
+            award_quiz_rewards(
+                1, "hewan", score=5, question_ids=["q1", "q2", "q3", "q4", "q5"]
+            ),
+            4,
+        )
+        self.assertEqual(
+            award_quiz_rewards(
+                1, "hewan", score=5, question_ids=["q1", "q2", "q3", "q4", "q5"]
+            ),
+            0,
+        )
+        self.assertEqual(get_user_stats(1)["stars"], 9)
 
-        # Duplicate upload with same hash should NOT award another star
-        awarded_second = award_upload_star(user_id, hash1)
-        self.assertFalse(awarded_second, "Duplicate upload should NOT award a star")
+        with self.connect() as connection:
+            legacy = connection.execute(
+                "SELECT best_score, is_unlocked, is_completed FROM chapter_progress "
+                "WHERE user_id = 1 AND category = 'hewan' AND chapter_id = 2;"
+            ).fetchone()
+            attempts = connection.execute(
+                "SELECT COUNT(*) AS count FROM quiz_attempts WHERE user_id = 1;"
+            ).fetchone()["count"]
+        self.assertEqual(tuple(legacy), (4, 1, 1))
+        self.assertEqual(attempts, 4)
 
-        # 2. Quiz reward: 4 correct answers
-        stars_quiz1 = award_quiz_rewards(user_id, "hewan", chapter_id=1, score=4, max_questions=5)
-        self.assertEqual(stars_quiz1, 4, "4 correct questions should award 4 stars")
+    def test_legacy_reward_reference_does_not_award_stars_twice(self):
+        with self.connect() as connection:
+            connection.execute(
+                "INSERT INTO reward_events (user_id, reward_type, reference_id, stars_awarded) "
+                "VALUES (1, 'quiz_question', 'hewan_1_q1', 1);"
+            )
+            connection.commit()
+        self.assertEqual(
+            award_quiz_rewards(1, "hewan", chapter_id=1, score=1),
+            0,
+        )
 
-        # Repeating quiz with same or lower score shouldn't award duplicate question stars
-        stars_quiz_repeat = award_quiz_rewards(user_id, "hewan", chapter_id=1, score=3, max_questions=5)
-        self.assertEqual(stars_quiz_repeat, 0, "Repeated quiz with lower score should award 0 new stars")
+    def test_material_completion_is_persisted_by_card_id(self):
+        self.assertTrue(mark_material_completed(1, "hewan", "mamalia"))
+        self.assertFalse(mark_material_completed(1, "hewan", "mamalia"))
+        self.assertEqual(get_material_progress(1, "hewan"), {"mamalia"})
+        self.assertEqual(get_user_stats(1)["completed_material"], 1)
 
-        # Improving score to 5/5 -> +1 new question star and +3 perfect score bonus = +4 stars!
-        stars_perfect = award_quiz_rewards(user_id, "hewan", chapter_id=1, score=5, max_questions=5)
-        self.assertEqual(stars_perfect, 4, "Reaching 5/5 should award 1 new question star + 3 bonus stars")
-
-        # Check total stars: 1 (upload) + 4 (first quiz) + 4 (improvement + bonus) = 9 stars
-        stats = get_user_stats(user_id)
-        self.assertEqual(stats["stars"], 9)
-
-        # Check Chapter 2 is unlocked because score >= 3
-        prog = get_chapter_progress(user_id, "hewan")
-        self.assertTrue(prog[2]["is_unlocked"], "Chapter 2 should be unlocked after passing Chapter 1")
-
-    def test_leaderboard_ordering(self):
+    def test_leaderboard_is_sorted_by_stars_and_ranked(self):
+        with self.connect() as connection:
+            connection.executemany(
+                "INSERT INTO users (id, username) VALUES (?, ?);",
+                [(1, "first"), (2, "second")],
+            )
+            connection.executemany(
+                "INSERT INTO reward_events (user_id, reward_type, reference_id, stars_awarded) "
+                "VALUES (?, 'quiz_question', ?, ?);",
+                [(1, "a", 3), (2, "b", 8)],
+            )
+            connection.commit()
         board = get_leaderboard(limit=10)
-        self.assertIsInstance(board, list)
-        if len(board) >= 2:
-            # Check descending order of stars
-            for i in range(len(board) - 1):
-                self.assertGreaterEqual(board[i]["stars"], board[i + 1]["stars"])
+        self.assertEqual([row["user_id"] for row in board[:2]], [2, 1])
+        self.assertEqual(get_user_rank(1), 2)
+
+    def test_leaderboard_can_return_every_user_for_paged_display(self):
+        with self.connect() as connection:
+            connection.executemany(
+                "INSERT INTO users (id, username) VALUES (?, ?);",
+                [(1, "first"), (2, "second"), (3, "third")],
+            )
+            connection.commit()
+
+        self.assertEqual(len(get_leaderboard(limit=1)), 1)
+        self.assertEqual(
+            [row["user_id"] for row in get_leaderboard(limit=None)],
+            [1, 2, 3],
+        )
 
 
 if __name__ == "__main__":

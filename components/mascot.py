@@ -1,66 +1,70 @@
-"""BIOVA Mascot Component
-Handles rendering the frog mascot across different emotions and contexts.
+"""BIOVA Mascot & Missing Asset Placeholder Component
+Provides a reusable placeholder for missing visual assets (mascot, 3D models, etc.).
+All mascot image usage has been replaced with this placeholder per design revision.
 """
 
-from pathlib import Path
 import streamlit as st
-import base64
-from services.config import MASCOT_DIR
+from components.icons import render_icon
+from services.config import COLOR_BORDER, COLOR_CARD, COLOR_TEXT
 
 
-def get_image_base64(path: Path) -> str:
-    """Reads an image file and converts it to a base64 string for embedding."""
-    if not path.exists():
-        return ""
-    with open(path, "rb") as f:
-        data = f.read()
-    return base64.b64encode(data).decode("utf-8")
+def missing_asset_placeholder(
+    label: str = "Aset belum tersedia",
+    width: int = 180,
+    height: int = 140,
+    center: bool = True,
+):
+    """Renders a dashed-border placeholder box for any missing visual asset.
+
+    Args:
+        label: Context text shown below the X mark (e.g. "Maskot", "Model 3D").
+        width: Width of the placeholder box in pixels.
+        height: Height of the placeholder box in pixels.
+        center: Whether to horizontally center the box.
+    """
+    align = "margin: 12px auto 14px auto;" if center else "margin: 12px 0 14px 0;"
+    html = f"""
+    <div style="
+        width: {width}px;
+        max-width: 100%;
+        height: {height}px;
+        border: 2.5px dashed {COLOR_BORDER};
+        border-radius: 16px;
+        background-color: {COLOR_CARD};
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        {align}
+    ">
+        <div style="margin-bottom:6px;">
+            {render_icon("info", 36, "biova-icon--heading", label)}
+        </div>
+        <div style="
+            font-size: 11px;
+            color: #888888;
+            font-weight: 600;
+            text-align: center;
+            padding: 0 10px;
+        ">{label}</div>
+    </div>
+    """
+    st.markdown(html, unsafe_allow_html=True)
 
 
 def render_mascot(mood: str = "happy", width: int = 140, center: bool = True):
-    """Renders the mascot based on requested mood (happy, sad, celebrate, welcome)."""
-    file_map = {
-        "happy": MASCOT_DIR / "frog_success.png",
-        "success": MASCOT_DIR / "frog_success.png",
-        "sad": MASCOT_DIR / "frog_sad.png",
-        "celebrate": MASCOT_DIR / "frog_celebrate.png",
-        "welcome": MASCOT_DIR / "mascot_home_bottom.png",
+    """Legacy API — now delegates to the placeholder.
+    Kept for backward compatibility so existing imports don't break.
+    """
+    mood_labels = {
+        "happy": "Maskot (senang)",
+        "success": "Maskot (berhasil)",
+        "sad": "Maskot (sedih)",
+        "celebrate": "Maskot (selebrasi)",
+        "welcome": "Maskot halaman utama",
     }
-
-    img_path = file_map.get(mood, MASCOT_DIR / "frog_success.png")
-    
-    if img_path.exists():
-        b64 = get_image_base64(img_path)
-        align_style = "justify-content: center;" if center else ""
-        html = f"""
-        <div style="display: flex; {align_style} margin: 8px 0 14px 0;">
-            <img src="data:image/png;base64,{b64}" width="{width}" style="max-width: 100%; height: auto; object-fit: contain;" alt="Mascot BIOVA ({mood})" />
-        </div>
-        """
-        st.markdown(html, unsafe_allow_html=True)
-    else:
-        # High quality inline SVG Fallback
-        color = "#416848" if mood != "sad" else "#5A7A60"
-        eye_expression = "●   ●" if mood != "sad" else "╥   ╥"
-        mouth = "◡" if mood != "sad" else "︵"
-        svg = f"""
-        <div style="display: flex; justify-content: center; margin: 10px 0;">
-            <svg width="{width}" height="{width*0.8}" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
-                <!-- Body -->
-                <ellipse cx="50" cy="50" rx="35" ry="25" fill="{color}" />
-                <!-- Eyes -->
-                <circle cx="32" cy="30" r="12" fill="{color}" />
-                <circle cx="68" cy="30" r="12" fill="{color}" />
-                <circle cx="32" cy="30" r="9" fill="#FFFFFF" />
-                <circle cx="68" cy="30" r="9" fill="#FFFFFF" />
-                <circle cx="33" cy="31" r="5" fill="#263C2B" />
-                <circle cx="67" cy="31" r="5" fill="#263C2B" />
-                <!-- Cheeks -->
-                <circle cx="28" cy="52" r="5" fill="#EFAAA0" opacity="0.6" />
-                <circle cx="72" cy="52" r="5" fill="#EFAAA0" opacity="0.6" />
-                <!-- Smile/Frown -->
-                <path d="{'M 38 52 Q 50 64 62 52' if mood != 'sad' else 'M 38 60 Q 50 50 62 60'}" stroke="#263C2B" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-            </svg>
-        </div>
-        """
-        st.markdown(svg, unsafe_allow_html=True)
+    label = mood_labels.get(mood, "Maskot belum tersedia")
+    # Map width to reasonable placeholder sizes
+    ph_w = min(width, 200)
+    ph_h = int(ph_w * 0.72)
+    missing_asset_placeholder(label=label, width=ph_w, height=ph_h, center=center)

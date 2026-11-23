@@ -7,12 +7,11 @@ from services.db import get_connection
 from services.game_service import calculate_tier
 
 
-def get_leaderboard(limit: int = 50) -> List[Dict[str, Any]]:
+def get_leaderboard(limit: Optional[int] = 50) -> List[Dict[str, Any]]:
     """Fetches real leaderboard rankings sorted by stars and earliest registration date."""
     with get_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute(
-            """
+        query = """
             SELECT 
                 u.id,
                 u.username,
@@ -22,11 +21,13 @@ def get_leaderboard(limit: int = 50) -> List[Dict[str, Any]]:
             FROM users u
             LEFT JOIN reward_events r ON u.id = r.user_id
             GROUP BY u.id
-            ORDER BY total_stars DESC, u.created_at ASC
-            LIMIT ?;
-            """,
-            (limit,),
-        )
+            ORDER BY total_stars DESC, u.created_at ASC, u.id ASC
+        """
+        parameters = ()
+        if limit is not None:
+            query += " LIMIT ?"
+            parameters = (limit,)
+        cursor.execute(query, parameters)
         rows = cursor.fetchall()
 
         leaderboard = []
@@ -45,7 +46,7 @@ def get_leaderboard(limit: int = 50) -> List[Dict[str, Any]]:
 
 def get_user_rank(user_id: int) -> Optional[int]:
     """Computes the exact rank position of a given user."""
-    board = get_leaderboard(limit=1000)
+    board = get_leaderboard(limit=None)
     for entry in board:
         if entry["user_id"] == user_id:
             return entry["rank"]

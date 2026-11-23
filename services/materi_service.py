@@ -26,13 +26,29 @@ def load_material_data(category: str) -> Dict[str, Any]:
 
 
 def get_all_chapters(category: str) -> List[Dict[str, Any]]:
-    """Returns all chapters for a category."""
+    """Returns legacy chapter records for compatibility with existing content."""
     data = load_material_data(category)
     return data.get("chapters", [])
 
 
+def get_all_cards(category: str) -> List[Dict[str, Any]]:
+    """Returns the active, chapter-free material collection for a category."""
+    chapters = get_all_chapters(category)
+    if not chapters:
+        return []
+
+    cards = []
+    for index, card in enumerate(chapters[0].get("cards", []), start=1):
+        material = dict(card)
+        material["material_id"] = str(
+            card.get("class_id") or card.get("topic_id") or f"{category}-{index}"
+        )
+        cards.append(material)
+    return cards
+
+
 def get_chapter_by_id(category: str, chapter_id: int) -> Optional[Dict[str, Any]]:
-    """Retrieves a specific chapter by ID."""
+    """Retrieves a legacy chapter record by ID."""
     chapters = get_all_chapters(category)
     for ch in chapters:
         if ch["id"] == chapter_id:
@@ -41,7 +57,7 @@ def get_chapter_by_id(category: str, chapter_id: int) -> Optional[Dict[str, Any]
 
 
 def get_card(category: str, chapter_id: int, card_index: int) -> Optional[Dict[str, Any]]:
-    """Retrieves a specific educational card within a chapter by 0-based index."""
+    """Retrieves a legacy educational card within a chapter by 0-based index."""
     ch = get_chapter_by_id(category, chapter_id)
     if not ch:
         return None

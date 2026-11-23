@@ -7,6 +7,7 @@
         {
           "id": 1,
           "title": "Struktur Biji & Keping (Kotiledon)",
+          "topic_id": "biji_keping",
           "class_name": "Klasifikasi Dasar",
           "icon": "🌱",
           "description": "Tumbuhan berbunga (Angiospermae) terbagi menjadi dua kelas utama: Monokotil (biji berkeping satu) dan Dikotil (biji berkeping dua). Cadangan makanan disimpan dalam kotiledon untuk perkecambahan tunas.",
@@ -14,7 +15,8 @@
         },
         {
           "id": 2,
-          "title": "Sistem Perakaran: Serabut vs Tunggang",
+          "title": "Sistem Perakaran",
+          "topic_id": "sistem_perakaran",
           "class_name": "Morfologi Akar",
           "icon": "🥕",
           "description": "Monokotil memiliki sistem perakaran serabut yang menyebar di lapisan tanah atas. Sebaliknya, dikotil memiliki akar tunggang primer kokoh yang menembus ke dalam tanah dengan cabang-cabang akar lateral.",
@@ -22,7 +24,8 @@
         },
         {
           "id": 3,
-          "title": "Pola Pertulangan Daun",
+          "title": "Struktur & Tulang Daun",
+          "topic_id": "tulang_daun",
           "class_name": "Morfologi Daun",
           "icon": "🍃",
           "description": "Perhatikan urat-urat daun di sekitarmu! Tumbuhan monokotil memiliki pertulangan daun sejajar (seperti rumput/padi) atau melengkung (seperti sirih). Daun dikotil umumnya memiliki pola pertulangan menyirip (seperti mangga) atau menjari (seperti singkong).",
@@ -31,6 +34,7 @@
         {
           "id": 4,
           "title": "Struktur Batang & Kambium",
+          "topic_id": "batang_kambium",
           "class_name": "Anatomi Batang",
           "icon": "🪵",
           "description": "Batang dikotil memiliki kambium vaskular yang memungkinkan pertumbuhan sekunder melebar sehingga membentuk kayu dan lingkaran tahun. Batang monokotil tidak berkambium; berkas pembuluhnya tersebar acak di seluruh jaringan dasar.",
@@ -38,7 +42,8 @@
         },
         {
           "id": 5,
-          "title": "Kelipatan Mahkota Bunga",
+          "title": "Struktur Bunga",
+          "topic_id": "struktur_bunga",
           "class_name": "Organ Reproduksi",
           "icon": "🌸",
           "description": "Bunga monokotil biasanya memiliki mahkota, kelopak, atau benang sari dalam kelipatan 3 (contohnya bunga lili dan anggrek). Bunga dikotil memiliki bagian-bagian bunga dalam kelipatan 2, 4, atau 5 (contohnya bunga sepatu dan kamboja).",

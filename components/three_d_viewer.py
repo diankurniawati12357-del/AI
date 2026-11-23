@@ -7,6 +7,7 @@ from pathlib import Path
 import base64
 import streamlit as st
 import streamlit.components.v1 as components
+from components.icons import render_icon
 from services.config import COLOR_CARD, COLOR_BORDER, COLOR_PRIMARY
 
 
@@ -23,7 +24,7 @@ def render_3d_viewer(
         f"""
         <div style="margin-top: 14px; margin-bottom: 8px;">
             <div style="font-size: 15px; font-weight: 800; color: {COLOR_PRIMARY}; display: flex; align-items: center; gap: 6px;">
-                <span>🧊</span>
+                {render_icon("kubus3d", 24, "biova-icon--button", "Objek 3D")}
                 <span>Lihat dalam Bentuk 3D</span>
             </div>
         </div>
@@ -94,7 +95,8 @@ def render_3d_viewer(
                     {anim_attrs}>
                 </model-viewer>
                 <div class="controls-hint">
-                    👆 Geser untuk memutar • Cubit untuk zoom
+                    {render_icon("putar3d", 20, "biova-icon--button", "Rotasi 3D")}
+                    Geser untuk memutar • Cubit untuk zoom
                 </div>
             </div>
         </body>
@@ -106,7 +108,7 @@ def render_3d_viewer(
         st.markdown(
             f"""
             <div class="biova-card" style="text-align: center; padding: 24px 16px;">
-                <div style="font-size: 32px; margin-bottom: 6px;">🌱</div>
+                <div style="margin-bottom:6px;">{render_icon("kubus3d", 48, "biova-icon--heading", "Objek 3D")}</div>
                 <div style="font-weight: 700; font-size: 14px; color: {COLOR_PRIMARY};">
                     Visualisasi 3D Belum Tersedia
                 </div>
